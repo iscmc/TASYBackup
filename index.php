@@ -19,7 +19,7 @@ require_once __DIR__ . '/app/bootstrap.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $basePath = '/TASYBackup';
-
+/*
 // Remove base path e parâmetros de query
 $route = str_replace($basePath, '', parse_url($request, PHP_URL_PATH));
 
@@ -45,5 +45,21 @@ switch ($route) {
     default:
         http_response_code(404);
         include __DIR__ . '/app/views/404.php';
+        break;
+}
+*/
+// index.php na raiz
+$route = $_GET['route'] ?? 'home';
+
+switch ($route) {
+    case 'login':
+        require 'app/auth/login.php';
+        break;
+    case 'home':
+        require 'app/views/home.php';
+        break;
+    // adicione outros cases conforme necessário
+    default:
+        require 'app/views/404.php';
         break;
 }
