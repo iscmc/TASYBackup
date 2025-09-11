@@ -1,0 +1,535 @@
+[22-Jul-2025 19:00:13 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SyncModel::getRecentLogs() in C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php:69
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(53): HomeController->viewLogs()
+#1 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#2 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php on line 69
+[30-Jul-2025 09:44:57 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SyncModel::getRecentLogs() in C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php:69
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(53): HomeController->viewLogs()
+#1 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#2 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php on line 69
+[01-Aug-2025 15:26:23 America/Sao_Paulo] PHP Warning:  Undefined variable $baseUrl in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:26:23 America/Sao_Paulo] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:26:26 America/Sao_Paulo] PHP Warning:  Undefined variable $baseUrl in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:26:26 America/Sao_Paulo] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:26:28 America/Sao_Paulo] PHP Warning:  Undefined variable $baseUrl in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:26:28 America/Sao_Paulo] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:26:30 America/Sao_Paulo] PHP Warning:  Undefined variable $baseUrl in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:26:30 America/Sao_Paulo] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:26:44 America/Sao_Paulo] PHP Warning:  Undefined variable $baseUrl in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:26:44 America/Sao_Paulo] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:27:47 America/Sao_Paulo] PHP Warning:  Undefined variable $baseUrl in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:27:47 America/Sao_Paulo] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:27:51 America/Sao_Paulo] PHP Warning:  Undefined variable $baseUrl in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:27:51 America/Sao_Paulo] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:28:43 America/Sao_Paulo] PHP Warning:  Undefined variable $baseUrl in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 15:28:43 America/Sao_Paulo] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 23
+[01-Aug-2025 17:35:15 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SyncModel::getRecentLogs() in C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php:69
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(62): HomeController->viewLogs()
+#1 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#2 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php on line 69
+[01-Aug-2025 17:36:18 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SyncModel::getRecentLogs() in C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php:69
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(62): HomeController->viewLogs()
+#1 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#2 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php on line 69
+[01-Aug-2025 17:45:13 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-00904: &quot;MESSAGE&quot;: invalid identifier in C:\inetpub\wwwroot\TASYBackup\app\models\SyncModel.php on line 126
+[01-Aug-2025 17:47:16 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-00904: &quot;DETAILS&quot;: invalid identifier in C:\inetpub\wwwroot\TASYBackup\app\models\SyncModel.php on line 144
+[01-Aug-2025 17:47:19 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-00904: &quot;DETAILS&quot;: invalid identifier in C:\inetpub\wwwroot\TASYBackup\app\models\SyncModel.php on line 144
+[01-Aug-2025 17:56:19 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:56:24 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:56:29 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:56:34 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:56:39 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:56:45 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:56:50 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:56:55 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:00 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:06 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:11 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:16 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:21 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:26 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:32 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:37 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:42 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:47 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:52 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:57:57 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;MERGE INTO TASY_SYNC_CONTROL...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 152
+[01-Aug-2025 17:58:00 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-04031: unable to allocate 16416 bytes of shared memory (&quot;shared pool&quot;,&quot;SELECT 
+                   ...&quot;,&quot;sga heap(1,0)&quot;,&quot;modification hash table c&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\SyncModel.php on line 86
+[01-Aug-2025 17:58:00 America/Sao_Paulo] PHP Warning:  oci_fetch_assoc(): ORA-24374: define not done before fetch or execute and fetch in C:\inetpub\wwwroot\TASYBackup\app\models\SyncModel.php on line 88
+[01-Aug-2025 17:58:00 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 164
+[01-Aug-2025 17:58:00 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 169
+[01-Aug-2025 17:58:00 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 170
+[01-Aug-2025 17:58:00 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\views\home.php on line 176
+[06-Aug-2025 11:35:05 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-01017: invalid username/password; logon denied in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 52
+[06-Aug-2025 11:35:05 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 54
+[06-Aug-2025 11:35:05 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com banco de origem: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php:54
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php(24): BackupModel->connectToDatabases()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(25): BackupModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 54
+[06-Aug-2025 11:35:44 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-01017: invalid username/password; logon denied in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 52
+[06-Aug-2025 11:35:44 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 54
+[06-Aug-2025 11:35:44 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com banco de origem: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php:54
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php(24): BackupModel->connectToDatabases()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(25): BackupModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 54
+[06-Aug-2025 11:35:49 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-01017: invalid username/password; logon denied in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 52
+[06-Aug-2025 11:35:49 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 54
+[06-Aug-2025 11:35:49 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com banco de origem: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php:54
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php(24): BackupModel->connectToDatabases()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(25): BackupModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 54
+[06-Aug-2025 11:45:36 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-00942: table or view does not exist in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 253
+[06-Aug-2025 11:47:28 America/Sao_Paulo] PHP Warning:  oci_execute(): ORA-00904: &quot;SOURCE&quot;.&quot;NM_USUARIO_PESQUISA&quot;: invalid identifier in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 414
+[06-Aug-2025 15:12:48 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-04031: unable to allocate 12320 bytes of shared memory (&quot;shared pool&quot;,&quot;unknown object&quot;,&quot;KKSSP^267&quot;,&quot;kglseshtTable&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 62
+[06-Aug-2025 15:12:48 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 64
+[06-Aug-2025 15:12:48 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com banco local: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php:64
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php(24): BackupModel->connectToDatabases()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(25): BackupModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 64
+[06-Aug-2025 15:13:04 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-04031: unable to allocate 12320 bytes of shared memory (&quot;shared pool&quot;,&quot;unknown object&quot;,&quot;KKSSP^267&quot;,&quot;kglseshtTable&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 62
+[06-Aug-2025 15:13:04 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 64
+[06-Aug-2025 15:13:04 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com banco local: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php:64
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php(24): BackupModel->connectToDatabases()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(25): BackupModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 64
+[06-Aug-2025 15:13:10 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-04031: unable to allocate 12320 bytes of shared memory (&quot;shared pool&quot;,&quot;unknown object&quot;,&quot;KKSSP^267&quot;,&quot;kglseshtTable&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 62
+[06-Aug-2025 15:13:10 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 64
+[06-Aug-2025 15:13:10 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com banco local: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php:64
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php(24): BackupModel->connectToDatabases()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(25): BackupModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 64
+[06-Aug-2025 15:13:43 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-04031: unable to allocate 12320 bytes of shared memory (&quot;shared pool&quot;,&quot;unknown object&quot;,&quot;KKSSP^267&quot;,&quot;kglseshtTable&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 62
+[06-Aug-2025 15:13:43 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 64
+[06-Aug-2025 15:13:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com banco local: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php:64
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php(24): BackupModel->connectToDatabases()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(25): BackupModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BackupModel.php on line 64
+[06-Aug-2025 15:47:33 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: OCISessionBegin: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^101","kglseshtTable")
+ (ext\pdo_oci\oci_driver.c:837) in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php:24
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php(24): PDO->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(32): PacienteModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 24
+[06-Aug-2025 15:47:42 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: OCISessionBegin: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^101","kglseshtTable")
+ (ext\pdo_oci\oci_driver.c:837) in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php:24
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php(24): PDO->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(32): PacienteModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 24
+[06-Aug-2025 15:49:35 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: OCISessionBegin: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^101","kglseshtTable")
+ (ext\pdo_oci\oci_driver.c:837) in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php:24
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php(24): PDO->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(32): PacienteModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 24
+[06-Aug-2025 16:38:55 America/Sao_Paulo] Erro na conexão com o Oracle XE: SQLSTATE[HY000]: OCISessionBegin: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^101","kglseshtTable")
+ (ext\pdo_oci\oci_driver.c:837)
+[06-Aug-2025 16:38:55 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados local. Tente novamente mais tarde. in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php:46
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(32): PacienteModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 46
+[06-Aug-2025 16:39:03 America/Sao_Paulo] Erro na conexão com o Oracle XE: SQLSTATE[HY000]: OCISessionBegin: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^101","kglseshtTable")
+ (ext\pdo_oci\oci_driver.c:837)
+[06-Aug-2025 16:39:03 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados local. Tente novamente mais tarde. in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php:46
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(32): PacienteModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 46
+[06-Aug-2025 16:39:36 America/Sao_Paulo] Erro na conexão com o Oracle XE: SQLSTATE[HY000]: OCISessionBegin: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^101","kglseshtTable")
+ (ext\pdo_oci\oci_driver.c:837)
+[06-Aug-2025 16:39:36 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados local. Tente novamente mais tarde. in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php:46
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(32): PacienteModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 46
+[06-Aug-2025 16:39:52 America/Sao_Paulo] Erro na conexão com o Oracle XE: SQLSTATE[HY000]: OCISessionBegin: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^101","kglseshtTable")
+ (ext\pdo_oci\oci_driver.c:837)
+[06-Aug-2025 16:39:52 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados local. Tente novamente mais tarde. in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php:46
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(32): PacienteModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 46
+[06-Aug-2025 16:51:23 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare PacienteModel::__destruct() in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 105
+[06-Aug-2025 16:52:10 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 31
+[06-Aug-2025 16:52:10 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 41
+[06-Aug-2025 16:52:10 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:52:10 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados. Tente novamente mais tarde. in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(32): PacienteModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 51
+[06-Aug-2025 16:53:51 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: OCISessionBegin: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^267","kglseshtTable")
+ (ext\pdo_oci\oci_driver.c:837) in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:24
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(24): PDO->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 24
+[06-Aug-2025 16:53:57 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: OCISessionBegin: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^267","kglseshtTable")
+ (ext\pdo_oci\oci_driver.c:837) in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:24
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(24): PDO->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#4 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 24
+[06-Aug-2025 16:56:10 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:56:10 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:56:10 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:56:10 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 16:56:13 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:56:13 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:56:13 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:56:13 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 16:56:36 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:56:36 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:56:36 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:56:36 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 16:57:40 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:57:40 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:57:40 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:57:40 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 16:57:42 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:57:42 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:57:42 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:57:42 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 16:57:44 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:57:44 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:57:44 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:57:44 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 16:57:45 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:57:45 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:57:45 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:57:45 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 16:57:45 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:57:45 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:57:45 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:57:45 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 16:59:41 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:59:41 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:59:41 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:59:41 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 16:59:44 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 16:59:44 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 16:59:44 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 16:59:44 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 17:01:24 America/Sao_Paulo] PHP Warning:  oci_connect(): External Authentication is not supported on Windows in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 31
+[06-Aug-2025 17:01:24 America/Sao_Paulo] PHP Warning:  Trying to access array offset on false in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 41
+[06-Aug-2025 17:01:24 America/Sao_Paulo] Erro na conexão com Oracle XE: Erro na conexão Oracle: 
+[06-Aug-2025 17:01:24 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Não foi possível conectar ao banco de dados de autenticação. in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:51
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 51
+[06-Aug-2025 17:06:13 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "BaseModel" not found in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:19
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(19): require_once()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(58): require('...')
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 19
+[06-Aug-2025 18:33:49 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-12154: TNS:could not resolve the connect identifier specified in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 35
+[06-Aug-2025 18:33:49 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:33:49 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:37
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:33:52 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-12154: TNS:could not resolve the connect identifier specified in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 35
+[06-Aug-2025 18:33:52 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:33:52 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:37
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:33:54 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-12154: TNS:could not resolve the connect identifier specified in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 35
+[06-Aug-2025 18:33:54 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:33:54 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:37
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:38:26 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-12154: TNS:could not resolve the connect identifier specified in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 35
+[06-Aug-2025 18:38:26 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:38:26 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:37
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:38:29 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-12154: TNS:could not resolve the connect identifier specified in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 35
+[06-Aug-2025 18:38:29 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:38:29 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:37
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:40:57 America/Sao_Paulo] PHP Warning:  Undefined array key "service_name" in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 33
+[06-Aug-2025 18:40:57 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-12154: TNS:could not resolve the connect identifier specified in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 35
+[06-Aug-2025 18:40:57 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:40:57 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:37
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:41:43 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-12154: TNS:could not resolve the connect identifier specified in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 35
+[06-Aug-2025 18:41:43 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:41:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:37
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:43:12 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-12154: TNS:could not resolve the connect identifier specified in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 35
+[06-Aug-2025 18:43:12 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:43:12 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:37
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:43:18 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-12154: TNS:could not resolve the connect identifier specified in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 35
+[06-Aug-2025 18:43:18 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:43:18 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: Array in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:37
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(59): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 37
+[06-Aug-2025 18:47:21 America/Sao_Paulo] PHP Parse error:  syntax error, unexpected token ";", expecting ")" in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 48
+[06-Aug-2025 18:48:05 America/Sao_Paulo] PHP Parse error:  Unclosed '(' on line 47 does not match '}' in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 49
+[06-Aug-2025 18:48:25 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[06-Aug-2025 19:00:46 America/Sao_Paulo] PHP Warning:  Constant BASE_URL already defined in C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php on line 46
+[06-Aug-2025 19:00:50 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[06-Aug-2025 19:01:14 America/Sao_Paulo] PHP Warning:  Constant BASE_URL already defined in C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php on line 46
+[06-Aug-2025 19:01:15 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[08-Aug-2025 08:05:30 America/Sao_Paulo] PHP Warning:  Constant BASE_URL already defined in C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php on line 46
+[08-Aug-2025 08:05:35 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[11-Aug-2025 08:44:39 America/Sao_Paulo] PHP Warning:  Constant BASE_URL already defined in C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php on line 46
+[11-Aug-2025 08:44:46 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-04031: unable to allocate 12320 bytes of shared memory (&quot;shared pool&quot;,&quot;unknown object&quot;,&quot;KKSSP^267&quot;,&quot;kglseshtTable&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 38
+[11-Aug-2025 08:44:46 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^267","kglseshtTable") in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:47
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(60): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 47
+[11-Aug-2025 08:45:35 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-04031: unable to allocate 12320 bytes of shared memory (&quot;shared pool&quot;,&quot;unknown object&quot;,&quot;KKSSP^267&quot;,&quot;kglseshtTable&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 38
+[11-Aug-2025 08:45:35 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^267","kglseshtTable") in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:47
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(57): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 47
+[11-Aug-2025 08:49:48 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Configurações de banco de dados incompletas no arquivo database.php in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:33
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(57): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 33
+[11-Aug-2025 08:52:10 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Configurações de banco de dados incompletas no arquivo database.php in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:33
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabases()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(57): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 33
+[11-Aug-2025 08:57:39 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-04031: unable to allocate 12320 bytes of shared memory (&quot;shared pool&quot;,&quot;unknown object&quot;,&quot;KKSSP^267&quot;,&quot;kglseshtTable&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 41
+[11-Aug-2025 08:57:39 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^267","kglseshtTable") in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:50
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(57): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 50
+[11-Aug-2025 09:01:10 America/Sao_Paulo] PHP Warning:  oci_connect(): ORA-04031: unable to allocate 12320 bytes of shared memory (&quot;shared pool&quot;,&quot;unknown object&quot;,&quot;KKSSP^267&quot;,&quot;kglseshtTable&quot;) in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 41
+[11-Aug-2025 09:01:10 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Falha na conexão com o banco de dados: ORA-04031: unable to allocate 12320 bytes of shared memory ("shared pool","unknown object","KKSSP^267","kglseshtTable") in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:50
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#2 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(57): HomeController->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#5 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 50
+[11-Aug-2025 09:16:50 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[11-Aug-2025 09:20:00 America/Sao_Paulo] PHP Fatal error:  Uncaught TypeError: oci_parse(): Argument #1 ($connection) must be of type resource, null given in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php:38
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(38): oci_parse()
+#1 C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php(26): BaseModel->connectToDatabase()
+#2 C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php(22): BaseModel->__construct()
+#3 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(31): UserModel->__construct()
+#4 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(57): HomeController->__construct()
+#5 C:\inetpub\wwwroot\TASYBackup\index.php(18): require_once('...')
+#6 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\BaseModel.php on line 38
+[11-Aug-2025 09:20:22 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[11-Aug-2025 09:28:06 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[11-Aug-2025 09:28:32 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[11-Aug-2025 09:30:12 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[11-Aug-2025 09:31:09 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
