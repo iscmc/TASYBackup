@@ -53,7 +53,7 @@ $route = $_GET['route'] ?? 'home';
 
 switch ($route) {
     case 'login':
-        require 'app/auth/login.php';
+        require 'app/views/auth/login.php';
         break;
     case 'home':
         require 'app/views/home.php';
