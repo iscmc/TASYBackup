@@ -14,12 +14,11 @@
  * @maindev  Sergio Figueroa
  */
 
-session_start();
 require_once __DIR__ . '/app/bootstrap.php';
-
+/*
 $request = $_SERVER['REQUEST_URI'];
 $basePath = '/TASYBackup';
-/*
+
 // Remove base path e parâmetros de query
 $route = str_replace($basePath, '', parse_url($request, PHP_URL_PATH));
 
@@ -48,7 +47,8 @@ switch ($route) {
         break;
 }
 */
-// index.php na raiz
+
+// Roteamento simplificado
 $route = $_GET['route'] ?? 'home';
 
 switch ($route) {

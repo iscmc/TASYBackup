@@ -14,7 +14,9 @@
  * @maindev  Sergio Figueroa
  */
 
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Configurações básicas
 define('APP_ROOT', dirname(__DIR__));

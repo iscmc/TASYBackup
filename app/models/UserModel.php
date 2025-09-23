@@ -14,7 +14,7 @@
  * @maindev  Sergio Figueroa
  */
 
-require_once __DIR__ . '/BaseModel.php';
+/*require_once __DIR__ . '/BaseModel.php';
 
 class UserModel extends BaseModel {
     
@@ -50,5 +50,54 @@ class UserModel extends BaseModel {
         oci_free_statement($stmt);
         
         return $user ?: false;
+    }
+}*/
+
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . 'DatabaseConnection.php';
+
+class UserModel {
+    public function authenticate($username, $password) {
+        try {
+            $query = "SELECT NM_USUARIO, DS_EMAIL, DS_SENHA 
+                     FROM USUARIO 
+                     WHERE NM_USUARIO = :username 
+                     AND DS_SENHA = :password";
+            
+            $stmt = DatabaseConnection::executeQuery($query, [
+                ':username' => $username,
+                ':password' => $password
+            ], 'local');
+            
+            $user = oci_fetch_assoc($stmt);
+            oci_free_statement($stmt);
+            
+            return $user ?: false;
+            
+        } catch (Exception $e) {
+            error_log("Erro de autenticação: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    public function getUserInfo($username) {
+        try {
+            $query = "SELECT NM_USUARIO, DS_EMAIL, NM_FUNCIONARIO 
+                     FROM USUARIO 
+                     WHERE NM_USUARIO = :username";
+            
+            $stmt = DatabaseConnection::executeQuery($query, [
+                ':username' => $username
+            ], 'local');
+            
+            $user = oci_fetch_assoc($stmt);
+            oci_free_statement($stmt);
+            
+            return $user ?: false;
+            
+        } catch (Exception $e) {
+            error_log("Erro ao buscar informações do usuário: " . $e->getMessage());
+            return false;
+        }
     }
 }

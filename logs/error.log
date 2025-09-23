@@ -533,3 +533,11 @@ Stack trace:
 [11-Aug-2025 09:28:32 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
 [11-Aug-2025 09:30:12 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
 [11-Aug-2025 09:31:09 America/Sao_Paulo] PHP Warning:  Undefined property: PacienteModel::$db in C:\inetpub\wwwroot\TASYBackup\app\models\PacienteModel.php on line 84
+[23-Sep-2025 10:41:08 America/Sao_Paulo] PHP Warning:  require_once(C:\inetpub\wwwroot\TASYBackup\app\modelsDatabaseConnection.php): Failed to open stream: No such file or directory in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 57
+[23-Sep-2025 10:41:08 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\inetpub\wwwroot\TASYBackup\app\modelsDatabaseConnection.php' (include_path='.;C:\php\pear') in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php:57
+Stack trace:
+#0 C:\inetpub\wwwroot\TASYBackup\app\controllers\HomeController.php(19): require_once()
+#1 C:\inetpub\wwwroot\TASYBackup\app\bootstrap.php(58): require('C:\\inetpub\\wwwr...')
+#2 C:\inetpub\wwwroot\TASYBackup\index.php(17): require_once('C:\\inetpub\\wwwr...')
+#3 {main}
+  thrown in C:\inetpub\wwwroot\TASYBackup\app\models\UserModel.php on line 57
