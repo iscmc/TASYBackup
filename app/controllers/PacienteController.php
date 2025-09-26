@@ -1,6 +1,6 @@
 <?php
 /**
- * Servidor de contingência ISCMC Off Grid
+ * Servidor de contingência ISCMC Off frid
  *
  * Este arquivo faz parte do framework MVC Projeto Contingenciamento.
  *
@@ -25,17 +25,13 @@ class PacienteController {
     }
     
     public function search() {
-        if (!isset($_SESSION['usuario_logado'])) {
-            header('Location: /TASYBackup/login');
-            exit;
-        }
-        
+        // REMOVER verificação de autenticação
         $results = [];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $criterioBusca = $_POST['searchTerm'];
-            $results = $this->PacienteModel->searchPacientes($criterioBusca);
+            $searchTerm = $_POST['searchTerm'];
+            $results = $this->pacienteModel->searchPacientes($searchTerm);
         }
         
-        include __DIR__ . '/../views/Paciente_search.php';
+        include __DIR__ . '/../views/busca_paciente.php';
     }
 }

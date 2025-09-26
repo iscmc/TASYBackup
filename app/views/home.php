@@ -216,6 +216,8 @@
                 </tbody>
             </table>
 
+            <?php 
+            /* REMOVER seção de autenticação
             <?php if (isset($_SESSION['user'])): ?>
             <div class="user-actions">
                 <h3>Consultas</h3>
@@ -223,6 +225,13 @@
                 <a href="/TASYBackup/logout" class="btn">Sair</a>
             </div>
             <?php endif; ?>
+            */ ?>
+
+            <!-- Adicionar acesso direto às consultas -->
+            <div class="user-actions">
+                <h3>Consultas</h3>
+                <a href="/TASYBackup/patients" class="btn">Consultar Pacientes</a>
+            </div>
 
         </div>
     </div>

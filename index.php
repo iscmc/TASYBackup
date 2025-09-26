@@ -14,52 +14,59 @@
  * @maindev  Sergio Figueroa
  */
 
+session_start();
 require_once __DIR__ . '/app/bootstrap.php';
-/*
+
 $request = $_SERVER['REQUEST_URI'];
 $basePath = '/TASYBackup';
 
-// Remove base path e parâmetros de query
-$route = str_replace($basePath, '', parse_url($request, PHP_URL_PATH));
+// Remove base path
+$route = str_replace($basePath, '', $request);
+$route = explode('?', $route)[0];
 
-// Roteamento simplificado
+// Roteamento simplificado - SEM AUTENTICAÇÃO
 switch ($route) {
     case '/':
     case '':
+    case '/login':  // Redireciona login para a página principal
         $controller = new HomeController();
         $controller->index();
         break;
-    case '/login':
-        $controller = new AuthController();
-        $controller->login();
-        break;
-    case '/logout':
-        $controller = new AuthController();
-        $controller->logout();
-        break;
-    case '/pacientes':
+    case '/patients':
         $controller = new PacienteController();
         $controller->search();
         break;
+    case '/force-sync':
+        $controller = new HomeController();
+        $controller->forceSync();
+        break;
+    case '/logs':
+        $controller = new HomeController();
+        $controller->viewLogs();
+        break;
     default:
+        // Tenta servir arquivos estáticos (CSS, JS, imagens)
+        if (preg_match('/\.(css|js|png|jpg|jpeg|gif|ico)$/i', $route)) {
+            $filePath = __DIR__ . $route;
+            if (file_exists($filePath)) {
+                $mimeTypes = [
+                    'css' => 'text/css',
+                    'js' => 'application/javascript',
+                    'png' => 'image/png',
+                    'jpg' => 'image/jpeg',
+                    'jpeg' => 'image/jpeg',
+                    'gif' => 'image/gif',
+                    'ico' => 'image/x-icon'
+                ];
+                $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                if (isset($mimeTypes[$ext])) {
+                    header('Content-Type: ' . $mimeTypes[$ext]);
+                    readfile($filePath);
+                    exit;
+                }
+            }
+        }
         http_response_code(404);
         include __DIR__ . '/app/views/404.php';
-        break;
-}
-*/
-
-// Roteamento simplificado
-$route = $_GET['route'] ?? 'home';
-
-switch ($route) {
-    case 'login':
-        require 'app/views/auth/login.php';
-        break;
-    case 'home':
-        require 'app/views/home.php';
-        break;
-    // adicione outros cases conforme necessário
-    default:
-        require 'app/views/404.php';
         break;
 }

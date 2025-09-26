@@ -1,6 +1,6 @@
 <?php
 /**
- * Servidor de contingência ISCMC Off Grid
+ * Servidor de contingência ISCMC Off frid
  *
  * Este arquivo faz parte do framework MVC Projeto Contingenciamento.
  *
@@ -16,126 +16,48 @@
 
 require_once __DIR__ . '/../models/BackupModel.php';
 require_once __DIR__ . '/../models/SyncModel.php';
-require_once __DIR__ . '/../models/UserModel.php';
-require_once __DIR__ . '/../models/PacienteModel.php';
+// REMOVER requires de UserModel e PacienteModel que não são mais necessários para auth
 
 class HomeController {
     private $backupModel;
     private $syncModel;
-    private $userModel;
-    private $pacienteModel;
     
     public function __construct() {
-        $this->initializeSession();
         $this->backupModel = new BackupModel();
         $this->syncModel = new SyncModel();
-        $this->userModel = new UserModel();
-        $this->pacienteModel = new PacienteModel();
+        // REMOVER inicialização de UserModel e PacienteModel
     }
-
-    /**
-     * Inicializa a sessão se não estiver ativa
-     */
-    private function initializeSession() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-    }
-
-    /**
-     * Página inicial/dashboard
-     */
+    
     public function index() {
-        $this->requireAuthentication();
-        
+        // REMOVER verificação de autenticação
         try {
-            $data = [
-                'syncStatus' => $this->syncModel->getSyncStatus(),
-                'connectionStatus' => $this->backupModel->testConnections(),
-                'systemInfo' => $this->syncModel->getSystemInfo()
+            $syncStatus = $this->syncModel->getSyncStatus();
+            $connectionStatus = $this->backupModel->testConnections();
+            $systemInfo = $this->syncModel->getSystemInfo();
+            
+            include __DIR__ . '/../views/home.php';
+        } catch (Exception $e) {
+            // Fallback para caso de falha
+            $connectionStatus = [
+                'source' => 'error',
+                'local' => 'error'
             ];
+            $systemInfo = [];
+            $syncStatus = [];
             
-            $this->loadView('home', $data);
-        } catch (Exception $e) {
-            $this->handleError($e, 'Erro ao carregar dashboard');
-            $this->loadView('home', [
-                'connectionStatus' => ['source' => 'error', 'local' => 'error'],
-                'systemInfo' => [],
-                'syncStatus' => []
-            ]);
-        }
+            include __DIR__ . '/../views/home.php';
+        }   
     }
 
-    /**
-     * Página de login
-     */
-    public function login() {
-        // Se já estiver logado, redireciona
-        if ($this->isAuthenticated()) {
-            $this->redirect('/');
-        }
+    // REMOVER métodos de login e logout
+    // public function login() { ... }
+    // public function logout() { ... }
+    // public function searchPaciente() { ... }
 
-        $error = null;
-        
-        // Processa o formulário de login
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $error = $this->handleLogin($_POST['username'] ?? '', $_POST['password'] ?? '');
-        }
-        
-        $this->loadView('auth/login', ['error' => $error]);
-    }
-
-    /**
-     * Processa o login
-     */
-    private function handleLogin($username, $password) {
-        try {
-            $user = $this->userModel->authenticate($username, $password);
-            
-            if ($user) {
-                $_SESSION['usuario_logado'] = $user;
-                $this->redirect('/');
-                return null;
-            }
-            
-            return "Usuário ou senha inválidos";
-        } catch (Exception $e) {
-            error_log("Erro de autenticação: " . $e->getMessage());
-            return "Erro durante o login. Tente novamente.";
-        }
-    }
-
-    /**
-     * Logout do sistema
-     */
-    public function logout() {
-        session_destroy();
-        $this->redirect('/login');
-    }
-
-    /**
-     * Busca de pacientes
-     */
-    public function searchPaciente() {
-        $this->requireAuthentication();
-
-        $results = [];
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $results = $this->pacienteModel->searchPaciente($_POST['searchTerm'] ?? '');
-        }
-        
-        $this->loadView('busca_paciente', ['results' => $results]);
-    }
-
-    /**
-     * Força sincronização
-     */
     public function forceSync() {
-        $this->requireAuthentication();
-
+        // REMOVER verificação de autenticação
         try {
             $table = $_GET['table'] ?? null;
-            
             if ($table) {
                 $result = $this->syncModel->forceTableSync($table);
                 $_SESSION['message'] = "Sincronização forçada para $table concluída. ".$result['count']." registros atualizados.";
@@ -148,51 +70,12 @@ class HomeController {
             $_SESSION['error'] = "Erro durante sincronização: ".$e->getMessage();
         }
         
-        $this->redirect('/');
+        header('Location: /TASYBackup/');
     }
-
-    /**
-     * Visualização de logs
-     */
-    public function viewLogs() {
-        $this->requireAuthentication();
-        $logs = $this->syncModel->getRecentLogs(50);
-        $this->loadView('logs', ['logs' => $logs]);
-    }
-
-    /**
-     * Métodos auxiliares
-     */
     
-    private function isAuthenticated() {
-        return isset($_SESSION['usuario_logado']);
-    }
-
-    private function requireAuthentication() {
-        if (!$this->isAuthenticated()) {
-            $this->redirect('/login');
-        }
-    }
-
-    private function redirect($path) {
-        $url = rtrim(BASE_URL, '/') . $path;
-        header('Location: ' . $url);
-        exit;
-    }
-
-    private function loadView($view, $data = []) {
-        extract($data);
-        $viewPath = TEMPLATE_PATH . $view . '.php';
-        
-        if (file_exists($viewPath)) {
-            include $viewPath;
-        } else {
-            throw new Exception("View não encontrada: " . $viewPath);
-        }
-    }
-
-    private function handleError(Exception $e, $message = '') {
-        error_log($message . ': ' . $e->getMessage());
-        $_SESSION['error'] = $message;
+    public function viewLogs() {
+        // REMOVER verificação de autenticação
+        $logs = $this->syncModel->getRecentLogs(50);
+        include __DIR__ . '/../views/logs.php';
     }
 }
