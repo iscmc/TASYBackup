@@ -54,7 +54,7 @@ class UserModel extends BaseModel {
 }*/
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . 'DatabaseConnection.php';
+require_once __DIR__ . '/DatabaseConnection.php';
 
 class UserModel {
     public function authenticate($username, $password) {
