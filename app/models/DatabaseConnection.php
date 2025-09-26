@@ -27,7 +27,7 @@ class DatabaseConnection {
             $config['pass'],
             $connectionString,
             $config['charset'],
-            OCI_CRED_EXT | OCI_NO_AUTO_COMMIT
+            OCI_NO_AUTO_COMMIT
         );
         
         if (!$conn) {
