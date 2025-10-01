@@ -53,7 +53,7 @@ class HomeController {
     // public function login() { ... }
     // public function logout() { ... }
     // public function searchPaciente() { ... }
-
+    
     public function forceSync() {
         // REMOVER verificação de autenticação
         try {

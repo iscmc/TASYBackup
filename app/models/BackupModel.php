@@ -165,6 +165,7 @@ class BackupModel {
             'CPOE_HEMOTERAPIA' => 'NR_SEQUENCIA',
             'CPOE_DIALISE' => 'NR_SEQUENCIA',
             'CPOE_INTERVENCAO' => 'NR_SEQUENCIA',
+            'PESSOA_FISICA' => 'CD_PESSOA_FISICA',
             'CPOE_ANATOMIA_PATOLOGICA' => 'NR_SEQUENCIA'
         ];
         
@@ -337,6 +338,7 @@ class BackupModel {
             'CPOE_HEMOTERAPIA' => 'DT_ATUALIZACAO',
             'CPOE_DIALISE' => 'DT_ATUALIZACAO',
             'CPOE_INTERVENCAO' => 'DT_ATUALIZACAO',
+            'PESSOA_FISICA' => 'CD_PESSOA_FISICA',
             'CPOE_ANATOMIA_PATOLOGICA' => 'DT_ATUALIZACAO'
         ];
 
@@ -834,6 +836,7 @@ class BackupModel {
             'REGRA_PADRAO_USUARIO' => 'NR_SEQUENCIA',
             'USER_LOCALE' => 'NM_USER',
             'PACIENTE' => 'CD_PACIENTE',
+            'PESSOA_FISICA' => 'CD_PESSOA_FISICA',
             'ATENDIMENTO' => 'NR_ATENDIMENTO'
         ];
         
@@ -859,6 +862,14 @@ class BackupModel {
     private function formatDateForOracle($dateString) {
         if (empty($dateString) || $dateString === ' ' || $dateString === 'NULL') {
             return null;
+        }
+
+        // ⭐⭐ CORREÇÃO CRÍTICA: Se já está no formato "01-OCT-25", converter para "01-OCT-2025"
+        if (preg_match('/^(\d{2}-[A-Za-z]{3}-\d{2})$/', $dateString, $matches)) {
+            $ano = '20' . substr($matches[1], -2); // Converte 25 para 2025
+            $novaData = substr($matches[1], 0, -2) . $ano . ' 00:00:00';
+            error_log("✅ Data convertida de '{$dateString}' para '{$novaData}'");
+            return $novaData;
         }
         
         // ⭐⭐ NOVA CORREÇÃO: Se já está no formato '27-Sep-2025 00:00:00', retornar como está
@@ -1717,5 +1728,45 @@ class BackupModel {
         return $totalProcessado;
     }
     
+    /**
+     * Diagnóstico específico para erro ORA-01858 na tabela USUARIO
+     */
+    public function diagnosticarProblemaNumerico($tableName) {
+        error_log("=== DIAGNÓSTICO ORA-01858 PARA: {$tableName} ===");
+        
+        // Buscar alguns registros problemáticos
+        $tableConfig = DatabaseConfig::getTableConfig($tableName);
+        $schema = $tableConfig['schema'] ?? 'TASY';
+        
+        $sql = "SELECT * FROM {$schema}.{$tableName} WHERE ROWNUM <= 5";
+        $stmt = oci_parse($this->sourceConn, $sql);
+        oci_execute($stmt);
+        
+        $registros = [];
+        while ($row = oci_fetch_assoc($stmt)) {
+            $registros[] = $row;
+        }
+        oci_free_statement($stmt);
+        
+        // Verificar colunas numéricas que podem ter problemas
+        $colunasNumericas = ['NR_SEQUENCIA', 'CD_PESSOA_FISICA', 'CD_SETOR_ATENDIMENTO', 'CD_ESTABELECIMENTO', 'QT_DIA_SENHA', 'CD_PERFIL_INICIAL'];
+        
+        error_log("Colunas numéricas a verificar: " . implode(', ', $colunasNumericas));
+        
+        foreach ($registros as $index => $registro) {
+            error_log("--- Registro {$index} ---");
+            foreach ($colunasNumericas as $coluna) {
+                if (isset($registro[$coluna])) {
+                    $valor = $registro[$coluna];
+                    $tipo = gettype($valor);
+                    $eNumerico = is_numeric($valor);
+                    $status = $eNumerico ? "✅ NUMÉRICO" : "❌ NÃO NUMÉRICO";
+                    error_log("{$coluna}: '{$valor}' ({$tipo}) - {$status}");
+                }
+            }
+        }
+        
+        return $registros;
+    }
 
 }

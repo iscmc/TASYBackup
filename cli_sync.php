@@ -5,5 +5,5 @@ set_time_limit(0); // Sem limite
 require_once '../TASYBackup/app/models/BackupModel.php';
 
 $model = new BackupModel();
-$result = $model->insertDataToLocal('CPOE_INTERVENCAO');
+$result = $model->insertDataToLocal('PESSOA_FISICA');
 echo "Concluído: " . json_encode($result);
