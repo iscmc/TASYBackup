@@ -35,7 +35,7 @@ class DatabaseConfig {
         'charset' => 'AL32UTF8'
     ];
 
-    // Configuração COMPLETA das tabelas com horas de sincronização
+    // Configuração COMPLETA das tabelas (pelo menos as da CPOE) com horas de sincronização
     public static $tablesConfig = [
         'USUARIO' => [
             'control_column' => 'DT_ATUALIZACAO',
