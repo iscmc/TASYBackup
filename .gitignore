@@ -1,0 +1,11 @@
+# Ignora todos os arquivos .bak (backup)
+*.bak
+
+# Ignora todos os arquivos .zip (arquivos compactados)
+*.zip
+
+# Ignora qualquer arquivo maior que 10MB (só um exemplo, mas ajuda!)
+# Nota: O gitignore não ignora por tamanho, você precisa listar as extensões ou nomes.
+# Se você sabe que algum arquivo específico é muito grande, adicione o nome dele aqui:
+# NomeDoArquivoGrande.mdf
+logs/
