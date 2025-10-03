@@ -223,7 +223,7 @@ class BackupModel {
             $whereClauses[] = "{$primaryKey} IS NOT NULL";
             $whereClauses[] = "{$primaryKey} != ' '"; 
             $whereClauses[] = "{$primaryKey} != ''";
-            $syncHours = $tableConfig['sync_hours'] ?? 72;
+            $syncHours = $tableConfig['sync_hours'] ?? 24;
             $schema = $tableConfig['schema'] ?? 'TASY';
 
             // Para chaves numéricas, garantir que são > 0
@@ -465,7 +465,7 @@ class BackupModel {
     }
 
     /**
-     * Busca dados da tabela remota (últimas 72 horas)
+     * Busca dados da tabela remota (últimas 72 horas) // alterei para 24 horas aqui e na linha 226
      */
     private function fetchDataFromRemote($tableName) {
         $tableConfig = DatabaseConfig::getTableConfig($tableName);
@@ -473,8 +473,8 @@ class BackupModel {
         $qualifiedTableName = "{$schema}.{$tableName}";
         
         $sql = "SELECT * FROM {$qualifiedTableName} 
-                WHERE DT_ATUALIZACAO >= SYSDATE - 3 
-                OR DT_ATUALIZACAO_NREC >= SYSDATE - 3";
+                WHERE DT_ATUALIZACAO >= SYSDATE - 1 
+                OR DT_ATUALIZACAO_NREC >= SYSDATE - 1"; //eram 3 e eu alterei para 1
         $stmt = oci_parse($this->sourceConn, $sql);
         
         if (!oci_execute($stmt)) {
