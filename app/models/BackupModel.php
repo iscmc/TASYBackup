@@ -221,7 +221,6 @@ class BackupModel {
             $controlColumn = $tableConfig['control_column'];
             $primaryKey = $tableConfig['key_column'];
             $whereClauses[] = "{$primaryKey} IS NOT NULL";
-            $whereClauses[] = "{$primaryKey} != ' '"; 
             $whereClauses[] = "{$primaryKey} != ''";
             $syncHours = $tableConfig['sync_hours'] ?? 24;
             $schema = $tableConfig['schema'] ?? 'TASY';
@@ -430,7 +429,17 @@ class BackupModel {
 
             // Se for uma tabela grande, processar em lotes menores
             if (count($remoteData) > 1000) {
-                return $this->processarEmLotes($tableName, $remoteData, 100);
+                $totalProcessado = $this->processarEmLotes($tableName, $remoteData, 100);
+                // ⭐⭐ CORREÇÃO: Converter número em array
+                return [
+                    'success' => true,
+                    'message' => "Tabela {$tableName} sincronizada em lotes",
+                    'records_processed' => $totalProcessado,
+                    'inserted' => $totalProcessado, // Assumindo que todos foram inseridos
+                    'updated' => 0,
+                    'errors' => 0,
+                    'invalid_records' => 0
+                ];
             }
             
             error_log("Encontrados " . count($remoteData) . " registros novos em {$tableName}");
@@ -439,7 +448,7 @@ class BackupModel {
             $result = $this->copyDataWithMerge($tableName, $remoteData);
             
             // 4. Atualizar controle de sincronização
-            $this->updateSyncControl($tableName, $result['processed']);
+            $this->updateSyncControl($tableName);
             
             // 5. Registrar no log
             $this->logSyncToDatabase($tableName, $result['processed'], 'INCREMENTAL');
@@ -546,7 +555,7 @@ class BackupModel {
             
             if ($valido) {
                 $dadosValidos[] = $row;
-                error_log("✅ REGISTRO {$index}: VÁLIDO - {$primaryKey} = '{$row[$primaryKey]}'");
+                //error_log("✅ REGISTRO {$index}: VÁLIDO - {$primaryKey} = '{$row[$primaryKey]}'"); //log comentado
             } else {
                 $dadosInvalidos[] = [
                     'index' => $index,
@@ -715,7 +724,7 @@ class BackupModel {
                 $bindValue = ${"bind_" . $col};
                 $tipo = gettype($bindValue);
                 $tamanho = is_string($bindValue) ? strlen($bindValue) : 'N/A';
-                error_log("  Bind CORRIGIDO: {$col} = '{$bindValue}' ({$tipo}, tamanho: {$tamanho})");
+                //error_log("  Bind CORRIGIDO: {$col} = '{$bindValue}' ({$tipo}, tamanho: {$tamanho})"); //log comentado
                 
                 // VERIFICAÇÃO CRÍTICA ESPECIAL PARA CHAVE PRIMÁRIA
                 if ($col === $primaryKey) {
@@ -735,14 +744,14 @@ class BackupModel {
                         if (preg_match('/^\d{2}-[A-Za-z]{3}-\d{4} \d{2}:\d{2}:\d{2}$/', $bindValue)) {
                             // Já está no formato correto, usar como string
                             oci_bind_by_name($stmt, ":{$col}", $bindValue);
-                            error_log("  ✅ Data no formato Oracle: {$col} = '{$bindValue}'");
+                            //error_log("  ✅ Data no formato Oracle: {$col} = '{$bindValue}'"); //log comentado
                         } else {
                             // Tentar converter para formato Oracle
                             $oracleDate = $this->formatDateForOracle($bindValue);
                             if ($oracleDate !== null) {
                                 ${"bind_" . $col} = $oracleDate;
                                 oci_bind_by_name($stmt, ":{$col}", ${"bind_" . $col});
-                                error_log("  ✅ Data convertida: {$col} = '{$oracleDate}'");
+                                //error_log("  ✅ Data convertida: {$col} = '{$oracleDate}'"); //log comentado
                             } else {
                                 // Se não conseguiu converter, tratar como NULL
                                 error_log("  ⚠️ Data inválida, definindo como NULL: {$col} = '{$bindValue}'");
@@ -868,7 +877,7 @@ class BackupModel {
         if (preg_match('/^(\d{2}-[A-Za-z]{3}-\d{2})$/', $dateString, $matches)) {
             $ano = '20' . substr($matches[1], -2); // Converte 25 para 2025
             $novaData = substr($matches[1], 0, -2) . $ano . ' 00:00:00';
-            error_log("✅ Data convertida de '{$dateString}' para '{$novaData}'");
+            //error_log("✅ Data convertida de '{$dateString}' para '{$novaData}'"); //log comentado
             return $novaData;
         }
         
@@ -949,33 +958,51 @@ class BackupModel {
     }
 
     /**
-     * Atualiza controle de sincronização
+     * Atualiza controle de sincronização com contagem TOTAL de registros
      */
-    private function updateSyncControl($tableName, $recordCount) {
-        // Contar registros reais na tabela
-        $countSql = "SELECT COUNT(*) as total FROM {$tableName}";
-        $countStmt = oci_parse($this->localConn, $countSql);
-        oci_execute($countStmt);
-        $total = oci_fetch_assoc($countStmt)['TOTAL'];
-        oci_free_statement($countStmt);
-        
-        // CORREÇÃO: Usar LAST_SYNC em vez de LAST_SYNC_DATE
-        $sql = "MERGE INTO TASY_SYNC_CONTROL t
-                USING (SELECT :table_name as table_name, :total as total FROM dual) s
-                ON (t.table_name = s.table_name)
-                WHEN MATCHED THEN
-                    UPDATE SET last_sync = SYSTIMESTAMP, record_count = :total
-                WHEN NOT MATCHED THEN
-                    INSERT (table_name, last_sync, record_count)
-                    VALUES (:table_name, SYSTIMESTAMP, :total)";
-        
-        $stmt = oci_parse($this->localConn, $sql);
-        oci_bind_by_name($stmt, ':table_name', $tableName);
-        oci_bind_by_name($stmt, ':total', $total);
-        oci_execute($stmt);
-        oci_free_statement($stmt);
-        
-        error_log("Controle atualizado: {$tableName} = {$total} registros");
+    private function updateSyncControl($tableName) {
+        try {
+            // Contar TODOS os registros reais na tabela local
+            $countSql = "SELECT COUNT(*) as total FROM {$tableName}";
+            $countStmt = oci_parse($this->localConn, $countSql);
+            
+            if (!oci_execute($countStmt)) {
+                error_log("ERRO ao contar registros para {$tableName}: " . oci_error($countStmt));
+                $total = 0;
+            } else {
+                $result = oci_fetch_assoc($countStmt);
+                $total = $result['TOTAL'] ?? 0;
+            }
+            oci_free_statement($countStmt);
+            
+            error_log("Contagem REAL de {$tableName}: {$total} registros");
+            
+            // Atualizar com MERGE usando LAST_SYNC (nome correto da coluna)
+            $sql = "MERGE INTO TASY_SYNC_CONTROL t
+                    USING (SELECT :table_name as table_name, :total as total FROM dual) s
+                    ON (t.table_name = s.table_name)
+                    WHEN MATCHED THEN
+                        UPDATE SET last_sync = SYSTIMESTAMP, record_count = :total
+                    WHEN NOT MATCHED THEN
+                        INSERT (table_name, last_sync, record_count)
+                        VALUES (:table_name, SYSTIMESTAMP, :total)";
+            
+            $stmt = oci_parse($this->localConn, $sql);
+            oci_bind_by_name($stmt, ':table_name', $tableName);
+            oci_bind_by_name($stmt, ':total', $total);
+            
+            if (!oci_execute($stmt)) {
+                error_log("ERRO ao atualizar TASY_SYNC_CONTROL: " . oci_error($stmt));
+            } else {
+                oci_commit($this->localConn);
+                error_log("✅ Controle ATUALIZADO: {$tableName} = {$total} registros em " . date('d-M-Y H:i:s'));
+            }
+            
+            oci_free_statement($stmt);
+            
+        } catch (Exception $e) {
+            error_log("EXCEÇÃO em updateSyncControl para {$tableName}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -1769,4 +1796,50 @@ class BackupModel {
         return $registros;
     }
 
+    /**
+     * Corrige imediatamente todas as contagens na TASY_SYNC_CONTROL
+     */
+    public function corrigirContagensImediatamente() {
+        $tables = DatabaseConfig::getTablesToSync();
+        $resultados = [];
+        
+        foreach ($tables as $tableName) {
+            try {
+                // Contar registros reais
+                $countSql = "SELECT COUNT(*) as total FROM {$tableName}";
+                $countStmt = oci_parse($this->localConn, $countSql);
+                oci_execute($countStmt);
+                $total = oci_fetch_assoc($countStmt)['TOTAL'];
+                oci_free_statement($countStmt);
+                
+                // Atualizar diretamente
+                $updateSql = "UPDATE TASY_SYNC_CONTROL 
+                            SET record_count = :total, last_sync = SYSTIMESTAMP 
+                            WHERE table_name = :table_name";
+                $updateStmt = oci_parse($this->localConn, $updateSql);
+                oci_bind_by_name($updateStmt, ':total', $total);
+                oci_bind_by_name($updateStmt, ':table_name', $tableName);
+                oci_execute($updateStmt);
+                oci_free_statement($updateStmt);
+                
+                $resultados[$tableName] = [
+                    'success' => true,
+                    'record_count' => $total,
+                    'message' => "Contagem corrigida para {$total} registros"
+                ];
+                
+                error_log("✅ {$tableName}: corrigido para {$total} registros");
+                
+            } catch (Exception $e) {
+                $resultados[$tableName] = [
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ];
+                error_log("❌ ERRO em {$tableName}: " . $e->getMessage());
+            }
+        }
+        
+        oci_commit($this->localConn);
+        return $resultados;
+    }
 }
