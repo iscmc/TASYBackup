@@ -447,7 +447,7 @@ class BackupModel {
             // 3. Copiar para local usando MERGE (com validação)
             $result = $this->copyDataWithMerge($tableName, $remoteData);
             
-            // 4. Atualizar controle de sincronização
+            // 4. Atualizar controle de sincronização (AGORA SEM PARÂMETRO)
             $this->updateSyncControl($tableName);
             
             // 5. Registrar no log
@@ -972,12 +972,11 @@ class BackupModel {
             } else {
                 $result = oci_fetch_assoc($countStmt);
                 $total = $result['TOTAL'] ?? 0;
+                error_log("✅ Contagem REAL de {$tableName}: {$total} registros");
             }
             oci_free_statement($countStmt);
             
-            error_log("Contagem REAL de {$tableName}: {$total} registros");
-            
-            // Atualizar com MERGE usando LAST_SYNC (nome correto da coluna)
+            // Atualizar com MERGE 
             $sql = "MERGE INTO TASY_SYNC_CONTROL t
                     USING (SELECT :table_name as table_name, :total as total FROM dual) s
                     ON (t.table_name = s.table_name)
@@ -992,16 +991,20 @@ class BackupModel {
             oci_bind_by_name($stmt, ':total', $total);
             
             if (!oci_execute($stmt)) {
-                error_log("ERRO ao atualizar TASY_SYNC_CONTROL: " . oci_error($stmt));
-            } else {
-                oci_commit($this->localConn);
-                error_log("✅ Controle ATUALIZADO: {$tableName} = {$total} registros em " . date('d-M-Y H:i:s'));
+                $error = oci_error($stmt);
+                error_log("❌ ERRO ao atualizar TASY_SYNC_CONTROL: " . $error['message']);
+                throw new Exception("Falha ao atualizar controle: " . $error['message']);
             }
             
+            // COMMIT EXPLÍCITO - ESSENCIAL
+            oci_commit($this->localConn);
             oci_free_statement($stmt);
             
+            error_log("🎯 Controle ATUALIZADO com SUCESSO: {$tableName} = {$total} registros");
+            
         } catch (Exception $e) {
-            error_log("EXCEÇÃO em updateSyncControl para {$tableName}: " . $e->getMessage());
+            error_log("🚨 EXCEÇÃO em updateSyncControl para {$tableName}: " . $e->getMessage());
+            // Não faz rollback para não perder os dados já inseridos
         }
     }
 
@@ -1303,7 +1306,7 @@ class BackupModel {
             // Processar apenas os válidos
             $result = $this->copyDataWithMerge($tableName, $dadosValidos);
             
-            $this->updateSyncControl($tableName, $result['processed']);
+            $this->updateSyncControl($tableName);
             $this->logSyncToDatabase($tableName, $result['processed'], 'EMERGENCY');
             
             return [
@@ -1841,5 +1844,91 @@ class BackupModel {
         
         oci_commit($this->localConn);
         return $resultados;
+    }
+
+    /**
+     '* Verifica e corrige o estado atual do sync control
+    */
+    public function verificarEstadoSyncControl($tableName = null) {
+        try {
+            if ($tableName) {
+                // Verificar uma tabela específica
+                $sql = "SELECT table_name, last_sync, record_count FROM TASY_SYNC_CONTROL WHERE table_name = :table_name";
+                $stmt = oci_parse($this->localConn, $sql);
+                oci_bind_by_name($stmt, ':table_name', $tableName);
+            } else {
+                // Verificar todas as tabelas
+                $sql = "SELECT table_name, last_sync, record_count FROM TASY_SYNC_CONTROL ORDER BY table_name";
+                $stmt = oci_parse($this->localConn, $sql);
+            }
+            
+            oci_execute($stmt);
+            
+            $resultados = [];
+            while ($row = oci_fetch_assoc($stmt)) {
+                $resultados[] = [
+                    'table_name' => $row['TABLE_NAME'],
+                    'last_sync' => $row['LAST_SYNC'],
+                    'record_count' => $row['RECORD_COUNT']
+                ];
+            }
+            oci_free_statement($stmt);
+            
+            return $resultados;
+            
+        } catch (Exception $e) {
+            error_log("ERRO ao verificar sync control: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Força a atualização imediata do sync control para uma tabela
+     */
+    public function forcarAtualizacaoSyncControl($tableName) {
+        try {
+            error_log("=== FORÇANDO ATUALIZAÇÃO DO SYNC CONTROL: {$tableName} ===");
+            
+            // Contar registros atuais
+            $countSql = "SELECT COUNT(*) as total FROM {$tableName}";
+            $countStmt = oci_parse($this->localConn, $countSql);
+            oci_execute($countStmt);
+            $total = oci_fetch_assoc($countStmt)['TOTAL'];
+            oci_free_statement($countStmt);
+            
+            error_log("Registros contados em {$tableName}: {$total}");
+            
+            // Atualizar diretamente
+            $updateSql = "UPDATE TASY_SYNC_CONTROL 
+                        SET record_count = :total, last_sync = SYSTIMESTAMP 
+                        WHERE table_name = :table_name";
+            $updateStmt = oci_parse($this->localConn, $updateSql);
+            oci_bind_by_name($updateStmt, ':total', $total);
+            oci_bind_by_name($updateStmt, ':table_name', $tableName);
+            
+            if (!oci_execute($updateStmt)) {
+                $error = oci_error($updateStmt);
+                throw new Exception("Erro ao forçar atualização: " . $error['message']);
+            }
+            
+            oci_commit($this->localConn);
+            oci_free_statement($updateStmt);
+            
+            error_log("✅ FORÇADO: {$tableName} atualizada para {$total} registros");
+            
+            return [
+                'success' => true,
+                'table_name' => $tableName,
+                'record_count' => $total,
+                'message' => "Sync control atualizado com sucesso"
+            ];
+            
+        } catch (Exception $e) {
+            error_log("❌ ERRO ao forçar atualização: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
     }
 }
