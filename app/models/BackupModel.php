@@ -166,6 +166,7 @@ class BackupModel {
             'CPOE_DIALISE' => 'NR_SEQUENCIA',
             'CPOE_INTERVENCAO' => 'NR_SEQUENCIA',
             'PESSOA_FISICA' => 'CD_PESSOA_FISICA',
+            'ATENDIMENTO_PACIENTE' => 'NR_ATENDIMENTO',
             'CPOE_ANATOMIA_PATOLOGICA' => 'NR_SEQUENCIA'
         ];
         
@@ -337,7 +338,8 @@ class BackupModel {
             'CPOE_HEMOTERAPIA' => 'DT_ATUALIZACAO',
             'CPOE_DIALISE' => 'DT_ATUALIZACAO',
             'CPOE_INTERVENCAO' => 'DT_ATUALIZACAO',
-            'PESSOA_FISICA' => 'CD_PESSOA_FISICA',
+            'PESSOA_FISICA' => 'DT_ATUALIZACAO',
+            'ATENDIMENTO_PACIENTE' => 'DT_ATUALIZACAO',
             'CPOE_ANATOMIA_PATOLOGICA' => 'DT_ATUALIZACAO'
         ];
 
@@ -403,14 +405,11 @@ class BackupModel {
      * MÉTODO PRINCIPAL - Copia dados de qualquer tabela (baseado no que funcionou para CPOE_DIETA)
      */
     public function insertDataToLocal($tableName) {
-        set_time_limit(600); // Aumenta para 10 minutos
+        set_time_limit(600);
         try {
-            error_log("=== INICIANDO SINCRONIZAÇÃO VALIDADA PARA: {$tableName} ===");
+            error_log("=== SINCRONIZAÇÃO SIMPLIFICADA: {$tableName} ===");
             
-            // Primeiro investigar se há dados problemáticos
-            $investigacao = $this->investigarDadosRemotos($tableName, 10);
-            
-            // 1. Obter último sync para sincronização incremental
+            // 1. Obter último sync
             $lastSync = $this->getUltimoSync($tableName);
             error_log("Última sincronização: " . ($lastSync ?: 'Nunca'));
             
@@ -420,35 +419,22 @@ class BackupModel {
             if (empty($remoteData)) {
                 error_log("Nenhum dado novo encontrado para {$tableName}");
                 $this->logSyncToDatabase($tableName, 0, 'INCREMENTAL');
+                // ⭐ ATUALIZAÇÃO SIMPLES MESMO SEM DADOS NOVOS
+                $this->updateSyncControlSimplificado($tableName);
                 return [
                     'success' => true,
                     'message' => "Nenhum registro novo para {$tableName}",
                     'records_processed' => 0
                 ];
             }
-
-            // Se for uma tabela grande, processar em lotes menores
-            if (count($remoteData) > 1000) {
-                $totalProcessado = $this->processarEmLotes($tableName, $remoteData, 100);
-                // ⭐⭐ CORREÇÃO: Converter número em array
-                return [
-                    'success' => true,
-                    'message' => "Tabela {$tableName} sincronizada em lotes",
-                    'records_processed' => $totalProcessado,
-                    'inserted' => $totalProcessado, // Assumindo que todos foram inseridos
-                    'updated' => 0,
-                    'errors' => 0,
-                    'invalid_records' => 0
-                ];
-            }
             
             error_log("Encontrados " . count($remoteData) . " registros novos em {$tableName}");
             
-            // 3. Copiar para local usando MERGE (com validação)
-            $result = $this->copyDataWithMerge($tableName, $remoteData);
+            // 3. Processar dados (com validação básica)
+            $result = $this->processarDadosSimplificado($tableName, $remoteData);
             
-            // 4. Atualizar controle de sincronização (AGORA SEM PARÂMETRO)
-            $this->updateSyncControl($tableName);
+            // 4. ⭐⭐ ATUALIZAÇÃO GARANTIDA DO CONTROLE - MESMO COM ERROS
+            $this->updateSyncControlSimplificado($tableName);
             
             // 5. Registrar no log
             $this->logSyncToDatabase($tableName, $result['processed'], 'INCREMENTAL');
@@ -459,12 +445,13 @@ class BackupModel {
                 'records_processed' => $result['processed'],
                 'inserted' => $result['inserted'],
                 'updated' => $result['updated'],
-                'errors' => $result['errors'],
-                'invalid_records' => $result['invalidos']
+                'errors' => $result['errors']
             ];
             
         } catch (Exception $e) {
             error_log("ERRO em insertDataToLocal para {$tableName}: " . $e->getMessage());
+            // ⭐⭐ ATUALIZAÇÃO DO CONTROLE MESMO EM CASO DE ERRO
+            $this->updateSyncControlSimplificado($tableName);
             $this->logSyncToDatabase($tableName, 0, 'ERROR: ' . $e->getMessage());
             return [
                 'success' => false,
@@ -472,6 +459,137 @@ class BackupModel {
             ];
         }
     }
+
+    /**
+     * Processamento simplificado de dados
+     */
+    private function processarDadosSimplificado($tableName, $data) {
+        if (empty($data)) {
+            return ['processed' => 0, 'inserted' => 0, 'updated' => 0, 'errors' => 0];
+        }
+
+        $primaryKey = $this->getPrimaryKeyForTable($tableName);
+        $processed = 0;
+        $inserted = 0;
+        $updated = 0;
+        $errors = 0;
+
+        foreach ($data as $row) {
+            try {
+                $result = $this->inserirOuAtualizarRegistro($tableName, $row, $primaryKey);
+                if ($result === 'INSERT') {
+                    $inserted++;
+                    $processed++;
+                } elseif ($result === 'UPDATE') {
+                    $updated++;
+                    $processed++;
+                }
+            } catch (Exception $e) {
+                $errors++;
+                error_log("Erro no registro: " . $e->getMessage());
+            }
+        }
+
+        // Commit final dos dados
+        oci_commit($this->localConn);
+
+        return [
+            'processed' => $processed,
+            'inserted' => $inserted,
+            'updated' => $updated,
+            'errors' => $errors
+        ];
+    }
+
+     /**
+     * Inserir ou atualizar registro individual
+     */
+    private function inserirOuAtualizarRegistro($tableName, $row, $primaryKey) {
+        if (!isset($row[$primaryKey]) || empty($row[$primaryKey])) {
+            throw new Exception("Chave primária inválida");
+        }
+
+        // Verifica se o registro já existe
+        $keyValue = $row[$primaryKey];
+        if ($this->isNewRecord($tableName, $primaryKey, $keyValue)) {
+            $this->inserirRegistro($tableName, $row);
+            return 'INSERT';
+        } else {
+            $this->atualizarRegistro($tableName, $row, $primaryKey, $keyValue);
+            return 'UPDATE';
+        }
+    }
+
+     /**
+     * Atualizar registro individual
+     */
+    private function atualizarRegistro($tableName, $row, $primaryKey, $keyValue) {
+        $updateCols = [];
+        foreach ($row as $col => $val) {
+            if ($col !== $primaryKey) {
+                $updateCols[] = "{$col} = :{$col}";
+            }
+        }
+        
+        $sql = "UPDATE {$tableName} SET " . implode(', ', $updateCols) . " WHERE {$primaryKey} = :primary_key";
+        $stmt = oci_parse($this->localConn, $sql);
+        
+        foreach ($row as $col => $val) {
+            if ($col !== $primaryKey) {
+                oci_bind_by_name($stmt, ":{$col}", $row[$col]);
+            }
+        }
+        oci_bind_by_name($stmt, ":primary_key", $keyValue);
+        
+        if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
+            $error = oci_error($stmt);
+            throw new Exception("Erro ao atualizar: " . $error['message']);
+        }
+        
+        oci_free_statement($stmt);
+    }
+
+    /**
+     * Método público para forçar atualização imediata do controle
+     */
+    public function forcarAtualizacaoControle($tableName = null) {
+        $tables = $tableName ? [$tableName] : DatabaseConfig::getTablesToSync();
+        $resultados = [];
+        
+        foreach ($tables as $table) {
+            try {
+                $this->updateSyncControlSimplificado($table);
+                $resultados[$table] = ['success' => true, 'message' => 'Controle atualizado'];
+            } catch (Exception $e) {
+                $resultados[$table] = ['success' => false, 'message' => $e->getMessage()];
+            }
+        }
+        
+        return $resultados;
+    }
+
+     /**
+     * Inserir registro individual
+     */
+    private function inserirRegistro($tableName, $row) {
+        $columns = array_keys($row);
+        $columnsStr = implode(', ', $columns);
+        $placeholders = ':' . implode(', :', $columns);
+        
+        $sql = "INSERT INTO {$tableName} ({$columnsStr}) VALUES ({$placeholders})";
+        $stmt = oci_parse($this->localConn, $sql);
+        
+        foreach ($row as $col => $val) {
+            oci_bind_by_name($stmt, ":{$col}", $row[$col]);
+        }
+        
+        if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
+            $error = oci_error($stmt);
+            throw new Exception("Erro ao inserir: " . $error['message']);
+        }
+        
+        oci_free_statement($stmt);
+    }   
 
     /**
      * Busca dados da tabela remota (últimas 72 horas) // alterei para 24 horas aqui e na linha 226
@@ -846,7 +964,7 @@ class BackupModel {
             'USER_LOCALE' => 'NM_USER',
             'PACIENTE' => 'CD_PACIENTE',
             'PESSOA_FISICA' => 'CD_PESSOA_FISICA',
-            'ATENDIMENTO' => 'NR_ATENDIMENTO'
+            'ATENDIMENTO_PACIENTE' => 'NR_ATENDIMENTO'
         ];
         
         return $primaryKeys[$tableName] ?? $this->getPrimaryKeyColumn($tableName);
@@ -1005,6 +1123,61 @@ class BackupModel {
         } catch (Exception $e) {
             error_log("🚨 EXCEÇÃO em updateSyncControl para {$tableName}: " . $e->getMessage());
             // Não faz rollback para não perder os dados já inseridos
+        }
+    }
+
+    /**
+     * ⭐⭐ MÉTODO SIMPLIFICADO PARA ATUALIZAR CONTROLE - GARANTIDO
+     */
+    private function updateSyncControlSimplificado($tableName) {
+        $startTime = microtime(true);
+        try {
+            // 1. Contagem DIRETA e SIMPLES
+            $countSql = "SELECT COUNT(*) as total FROM {$tableName}";
+            $countStmt = oci_parse($this->localConn, $countSql);
+            
+            if (!oci_execute($countStmt)) {
+                error_log("❌ ERRO na contagem de {$tableName}");
+                $total = 0;
+            } else {
+                $result = oci_fetch_assoc($countStmt);
+                $total = $result['TOTAL'] ?? 0;
+            }
+            oci_free_statement($countStmt);
+            
+            // 2. Atualização DIRETA e SIMPLES
+            $sql = "UPDATE TASY_SYNC_CONTROL 
+                    SET last_sync = SYSTIMESTAMP, record_count = :total 
+                    WHERE table_name = :table_name";
+            
+            $stmt = oci_parse($this->localConn, $sql);
+            oci_bind_by_name($stmt, ':total', $total);
+            oci_bind_by_name($stmt, ':table_name', $tableName);
+            
+            if (!oci_execute($stmt)) {
+                $error = oci_error($stmt);
+                error_log("❌ ERRO na atualização do controle: " . $error['message']);
+                // NÃO lança exceção - apenas log e continua
+            }
+            
+            oci_free_statement($stmt);
+            
+            // 3. ⭐⭐ COMMIT EXPLÍCITO E GARANTIDO
+            if (!oci_commit($this->localConn)) {
+                error_log("❌ ERRO no commit do controle");
+                // Tenta novamente
+                oci_commit($this->localConn);
+            }
+            
+            $endTime = microtime(true);
+            $duration = round(($endTime - $startTime) * 1000, 2);
+            
+            error_log("✅ CONTROLE ATUALIZADO: {$tableName} = {$total} registros ({$duration}ms)");
+            
+        } catch (Exception $e) {
+            error_log("🚨 EXCEÇÃO em updateSyncControlSimplificado: " . $e->getMessage());
+            // Tenta fazer commit mesmo com exceção
+            @oci_commit($this->localConn);
         }
     }
 
@@ -1847,17 +2020,15 @@ class BackupModel {
     }
 
     /**
-     '* Verifica e corrige o estado atual do sync control
+    * Verifica e corrige o estado atual do sync control
     */
     public function verificarEstadoSyncControl($tableName = null) {
         try {
             if ($tableName) {
-                // Verificar uma tabela específica
                 $sql = "SELECT table_name, last_sync, record_count FROM TASY_SYNC_CONTROL WHERE table_name = :table_name";
                 $stmt = oci_parse($this->localConn, $sql);
                 oci_bind_by_name($stmt, ':table_name', $tableName);
             } else {
-                // Verificar todas as tabelas
                 $sql = "SELECT table_name, last_sync, record_count FROM TASY_SYNC_CONTROL ORDER BY table_name";
                 $stmt = oci_parse($this->localConn, $sql);
             }
@@ -1881,7 +2052,7 @@ class BackupModel {
             return [];
         }
     }
-
+    
     /**
      * Força a atualização imediata do sync control para uma tabela
      */
