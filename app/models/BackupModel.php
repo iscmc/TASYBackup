@@ -169,6 +169,8 @@ class BackupModel {
             'ATENDIMENTO_PACIENTE' => 'NR_ATENDIMENTO',
             'SETOR_ATENDIMENTO' => 'CD_SETOR_ATENDIMENTO',
             'UNIDADE_ATENDIMENTO' => 'NR_SEQ_INTERNO',
+            'ATEND_PACIENTE_UNIDADE' => 'NR_SEQ_INTERNO',
+            'MEDICO' => 'CD_PESSOA_FISICA',
             'CPOE_ANATOMIA_PATOLOGICA' => 'NR_SEQUENCIA'
         ];
         
@@ -344,6 +346,8 @@ class BackupModel {
             'ATENDIMENTO_PACIENTE' => 'DT_ATUALIZACAO',
             'SETOR_ATENDIMENTO' => 'DT_ATUALIZACAO',
             'UNIDADE_ATENDIMENTO' => 'DT_ATUALIZACAO',
+            'ATEND_PACIENTE_UNIDADE' => 'DT_ATUALIZACAO',
+            'MEDICO' => 'DT_ATUALIZACAO',
             'CPOE_ANATOMIA_PATOLOGICA' => 'DT_ATUALIZACAO'
         ];
 
@@ -970,7 +974,9 @@ class BackupModel {
             'PESSOA_FISICA' => 'CD_PESSOA_FISICA',
             'ATENDIMENTO_PACIENTE' => 'NR_ATENDIMENTO',
             'SETOR_ATENDIMENTO' => 'CD_SETOR_ATENDIMENTO',
-            'UNIDADE_ATENDIMENTO' => 'NR_SEQ_INTERNO'
+            'UNIDADE_ATENDIMENTO' => 'NR_SEQ_INTERNO',
+            'ATEND_PACIENTE_UNIDADE' => 'NR_SEQ_INTERNO',
+            'MEDICO' => 'CD_PESSOA_FISICA'
         ];
         
         return $primaryKeys[$tableName] ?? $this->getPrimaryKeyColumn($tableName);
