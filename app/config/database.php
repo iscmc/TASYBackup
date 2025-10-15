@@ -17,9 +17,9 @@
 class DatabaseConfig {
     // Configurações de conexão (mantenha as existentes)
     public static $tasyDb = [
-        'host' => '10.250.250.214',
+        'host' => '10.250.250.204',
         'port' => '1521',
-        'service_name' => 'dbprod.tasy', // alterado para produção
+        'service_name' => 'dbprod', // alterado para produção
         'user' => 'ISCMC',
         'pass' => 'FFEYXAASY',
         'charset' => 'AL32UTF8',
