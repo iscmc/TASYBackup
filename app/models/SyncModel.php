@@ -19,7 +19,7 @@ require_once __DIR__ . '/BackupModel.php';
 class SyncModel extends BackupModel {
     
     public function getSyncStatus() {
-        $sql = "SELECT table_name, last_sync, record_count, status 
+        $sql = "SELECT table_name, to_char(last_sync,'dd/mm/yyyy hh24:mi:ss') as last_sync, record_count, status 
                 FROM TASY_SYNC_CONTROL 
                 ORDER BY table_name";
         

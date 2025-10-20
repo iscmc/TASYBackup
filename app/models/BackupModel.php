@@ -1059,7 +1059,7 @@ class BackupModel {
         if (preg_match('/^(\d{2}-[A-Za-z]{3}-\d{4} \d{2}:\d{2}:\d{2})\.\d+$/', $dateString, $matches)) {
             return $matches[1];
         }
-        
+
         try {
             // Tenta converter de timestamp Oracle curto (01-JAN-25)
             if (preg_match('/^(\d{2}-[A-Za-z]{3}-\d{2})$/', $dateString)) {
@@ -1811,98 +1811,6 @@ class BackupModel {
     }
 
     /**
-     * VALIDAÇÃO FINAL ANTES DO MERGE - GARANTIA MÁXIMA
-     */
-    private function validacaoFinalAntesDoMerge($tableName, $data) {
-        error_log("=== VALIDAÇÃO FINAL ANTES DO MERGE: {$tableName} ===");
-        
-        $dadosValidos = [];
-        $dadosInvalidos = [];
-        $primaryKey = $this->getPrimaryKeyForTable($tableName);
-        
-        foreach ($data as $index => $row) {
-            $valido = true;
-            
-            // VERIFICAÇÃO ABSOLUTA: NR_SEQUENCIA não pode ser NULL
-            if (!isset($row[$primaryKey]) || $row[$primaryKey] === null || $row[$primaryKey] === '') {
-                error_log("🚨 VALIDAÇÃO FINAL FALHOU: Registro {$index} tem {$primaryKey} NULL/VAZIO");
-                $valido = false;
-            }
-            // VERIFICAÇÃO EXTRA: Para CPOE_*, deve ser numérico > 0
-            elseif (strpos($tableName, 'CPOE_') === 0 && $primaryKey === 'NR_SEQUENCIA') {
-                if (!is_numeric($row[$primaryKey]) || $row[$primaryKey] <= 0) {
-                    error_log("🚨 VALIDAÇÃO FINAL FALHOU: Registro {$index} tem NR_SEQUENCIA inválida: '{$row[$primaryKey]}'");
-                    $valido = false;
-                }
-            }
-            
-            if ($valido) {
-                $dadosValidos[] = $row;
-            } else {
-                $dadosInvalidos[] = $row;
-            }
-        }
-        
-        error_log("VALIDAÇÃO FINAL: " . count($dadosValidos) . " válidos, " . count($dadosInvalidos) . " inválidos");
-        return $dadosValidos;
-    }
-
-    /**
-     * Método público para diagnóstico - pode ser chamado de qualquer lugar
-     */
-    public function diagnosticarTabela($tableName) {
-        try {
-            error_log("=== DIAGNÓSTICO PÚBLICO: {$tableName} ===");
-            
-            // 1. Buscar dados da origem
-            $remoteData = $this->fetchNewRecords($tableName);
-            error_log("Registros encontrados: " . count($remoteData));
-            
-            // 2. Verificar chaves primárias
-            $primaryKey = $this->getPrimaryKeyForTable($tableName);
-            error_log("Chave primária: {$primaryKey}");
-            
-            $nullCount = 0;
-            $invalidCount = 0;
-            $validCount = 0;
-            
-            foreach ($remoteData as $index => $row) {
-                if (!isset($row[$primaryKey]) || $row[$primaryKey] === null || $row[$primaryKey] === '') {
-                    $nullCount++;
-                    error_log("🚨 REGISTRO {$index}: {$primaryKey} = NULL/VAZIO");
-                } elseif ($primaryKey === 'NR_SEQUENCIA' && (!is_numeric($row[$primaryKey]) || $row[$primaryKey] <= 0)) {
-                    $invalidCount++;
-                    error_log("🚨 REGISTRO {$index}: {$primaryKey} = '{$row[$primaryKey]}' (INVÁLIDO)");
-                } else {
-                    $validCount++;
-                    error_log("✅ REGISTRO {$index}: {$primaryKey} = '{$row[$primaryKey]}'");
-                }
-            }
-            
-            $result = [
-                'total_registros' => count($remoteData),
-                'registros_validos' => $validCount,
-                'registros_null' => $nullCount,
-                'registros_invalidos' => $invalidCount,
-                'chave_primaria' => $primaryKey,
-                'status' => 'success'
-            ];
-            
-            error_log("=== RESULTADO DIAGNÓSTICO ===");
-            error_log("Total: {$result['total_registros']} | Válidos: {$result['registros_validos']} | NULL: {$result['registros_null']} | Inválidos: {$result['registros_invalidos']}");
-            
-            return $result;
-            
-        } catch (Exception $e) {
-            error_log("ERRO no diagnóstico: " . $e->getMessage());
-            return [
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ];
-        }
-    }
-
-    /**
      * Método público simples para obter a chave primária
      */
     public function getChavePrimaria($tableName) {
@@ -1976,47 +1884,6 @@ class BackupModel {
         
         return $totalProcessado;
     }
-    
-    /**
-     * Diagnóstico específico para erro ORA-01858 na tabela USUARIO
-     */
-    public function diagnosticarProblemaNumerico($tableName) {
-        error_log("=== DIAGNÓSTICO ORA-01858 PARA: {$tableName} ===");
-        
-        // Buscar alguns registros problemáticos
-        $tableConfig = DatabaseConfig::getTableConfig($tableName);
-        $schema = $tableConfig['schema'] ?? 'TASY';
-        
-        $sql = "SELECT * FROM {$schema}.{$tableName} WHERE ROWNUM <= 5";
-        $stmt = oci_parse($this->sourceConn, $sql);
-        oci_execute($stmt);
-        
-        $registros = [];
-        while ($row = oci_fetch_assoc($stmt)) {
-            $registros[] = $row;
-        }
-        oci_free_statement($stmt);
-        
-        // Verificar colunas numéricas que podem ter problemas
-        $colunasNumericas = ['NR_SEQUENCIA', 'CD_PESSOA_FISICA', 'CD_SETOR_ATENDIMENTO', 'CD_ESTABELECIMENTO', 'QT_DIA_SENHA', 'CD_PERFIL_INICIAL'];
-        
-        error_log("Colunas numéricas a verificar: " . implode(', ', $colunasNumericas));
-        
-        foreach ($registros as $index => $registro) {
-            error_log("--- Registro {$index} ---");
-            foreach ($colunasNumericas as $coluna) {
-                if (isset($registro[$coluna])) {
-                    $valor = $registro[$coluna];
-                    $tipo = gettype($valor);
-                    $eNumerico = is_numeric($valor);
-                    $status = $eNumerico ? "✅ NUMÉRICO" : "❌ NÃO NUMÉRICO";
-                    error_log("{$coluna}: '{$valor}' ({$tipo}) - {$status}");
-                }
-            }
-        }
-        
-        return $registros;
-    }
 
     /**
      * Corrige imediatamente todas as contagens na TASY_SYNC_CONTROL
@@ -2078,7 +1945,6 @@ class BackupModel {
                 $sql = "SELECT table_name, last_sync, record_count FROM TASY_SYNC_CONTROL ORDER BY table_name";
                 $stmt = oci_parse($this->localConn, $sql);
             }
-            
             oci_execute($stmt);
             
             $resultados = [];
