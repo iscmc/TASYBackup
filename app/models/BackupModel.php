@@ -515,18 +515,36 @@ class BackupModel {
      * Inserir ou atualizar registro individual
      */
     private function inserirOuAtualizarRegistro($tableName, $row, $primaryKey) {
-        if (!isset($row[$primaryKey]) || empty($row[$primaryKey])) {
-            throw new Exception("Chave primária inválida");
-        }
+        // CORREÇÃO EXCLUSIVAMENTE PARA TABELA COMPL_PESSOA_FISICA
+        if ($tableName === 'COMPL_PESSOA_FISICA') {
+            if (!isset($row['CD_PESSOA_FISICA']) || !isset($row['NR_SEQUENCIA'])) {
+                throw new Exception("Chaves compostas CD_PESSOA_FISICA e NR_SEQUENCIA inválidas");
+            }
 
-        // Verifica se o registro já existe
-        $keyValue = $row[$primaryKey];
-        if ($this->isNewRecord($tableName, $primaryKey, $keyValue)) {
-            $this->inserirRegistro($tableName, $row);
-            return 'INSERT';
+            $cd_pessoa = $row['CD_PESSOA_FISICA'];
+            $nr_sequencia = $row['NR_SEQUENCIA'];
+            
+            if ($this->isNewRecord($tableName, $primaryKey, ['CD_PESSOA_FISICA' => $cd_pessoa, 'NR_SEQUENCIA' => $nr_sequencia])) {
+                $this->inserirRegistro($tableName, $row);
+                return 'INSERT';
+            } else {
+                $this->atualizarRegistroComposta($tableName, $row, $cd_pessoa, $nr_sequencia);
+                return 'UPDATE';
+            }
         } else {
-            $this->atualizarRegistro($tableName, $row, $primaryKey, $keyValue);
-            return 'UPDATE';
+            // Código original para outras tabelas
+            if (!isset($row[$primaryKey]) || empty($row[$primaryKey])) {
+                throw new Exception("Chave primária inválida");
+            }
+
+            $keyValue = $row[$primaryKey];
+            if ($this->isNewRecord($tableName, $primaryKey, $keyValue)) {
+                $this->inserirRegistro($tableName, $row);
+                return 'INSERT';
+            } else {
+                $this->atualizarRegistro($tableName, $row, $primaryKey, $keyValue);
+                return 'UPDATE';
+            }
         }
     }
 
@@ -989,11 +1007,24 @@ class BackupModel {
      * Verifica se registro é novo
      */
     private function isNewRecord($tableName, $primaryKey, $keyValue) {
-        $sql = "SELECT COUNT(*) as count FROM {$tableName} WHERE {$primaryKey} = :key_value";
-        $stmt = oci_parse($this->localConn, $sql);
-        oci_bind_by_name($stmt, ':key_value', $keyValue);
-        oci_execute($stmt);
+        // CORREÇÃO ESPECÍFICA PARA COMPL_PESSOA_FISICA - verificar chave composta
+        if ($tableName === 'COMPL_PESSOA_FISICA') {
+            $sql = "SELECT COUNT(*) as count FROM {$tableName} WHERE CD_PESSOA_FISICA = :cd_pessoa AND NR_SEQUENCIA = :nr_sequencia";
+            $stmt = oci_parse($this->localConn, $sql);
+            
+            // Extrair valores da chave composta
+            $cd_pessoa = $keyValue['CD_PESSOA_FISICA'] ?? $keyValue;
+            $nr_sequencia = $keyValue['NR_SEQUENCIA'] ?? null;
+            
+            oci_bind_by_name($stmt, ':cd_pessoa', $cd_pessoa);
+            oci_bind_by_name($stmt, ':nr_sequencia', $nr_sequencia);
+        } else {
+            $sql = "SELECT COUNT(*) as count FROM {$tableName} WHERE {$primaryKey} = :key_value";
+            $stmt = oci_parse($this->localConn, $sql);
+            oci_bind_by_name($stmt, ':key_value', $keyValue);
+        }
         
+        oci_execute($stmt);
         $result = oci_fetch_assoc($stmt);
         oci_free_statement($stmt);
         
@@ -2116,5 +2147,35 @@ class BackupModel {
                 'message' => $e->getMessage()
             ];
         }
+    }
+
+    // Workaround para tratar a tabela compl_pessoa_fisica que tem chave composta - 2 índices
+    private function atualizarRegistroComposta($tableName, $row, $cd_pessoa, $nr_sequencia) {
+        $updateCols = [];
+        foreach ($row as $col => $val) {
+            if ($col !== 'CD_PESSOA_FISICA' && $col !== 'NR_SEQUENCIA') {
+                $updateCols[] = "{$col} = :{$col}";
+            }
+        }
+        
+        $sql = "UPDATE {$tableName} SET " . implode(', ', $updateCols) . 
+            " WHERE CD_PESSOA_FISICA = :cd_pessoa AND NR_SEQUENCIA = :nr_sequencia";
+        
+        $stmt = oci_parse($this->localConn, $sql);
+        
+        foreach ($row as $col => $val) {
+            if ($col !== 'CD_PESSOA_FISICA' && $col !== 'NR_SEQUENCIA') {
+                oci_bind_by_name($stmt, ":{$col}", $row[$col]);
+            }
+        }
+        oci_bind_by_name($stmt, ":cd_pessoa", $cd_pessoa);
+        oci_bind_by_name($stmt, ":nr_sequencia", $nr_sequencia);
+        
+        if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
+            $error = oci_error($stmt);
+            throw new Exception("Erro ao atualizar: " . $error['message']);
+        }
+        
+        oci_free_statement($stmt);
     }
 }
