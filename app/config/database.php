@@ -97,6 +97,12 @@ class DatabaseConfig {
             'sync_hours' => 72,
             'schema' => 'TASY'
         ],
+        'COMPL_PESSOA_FISICA' => [
+            'control_column' => 'DT_ATUALIZACAO',
+            'key_column' => 'CD_PESSOA_FISICA',
+            'sync_hours' => 72,
+            'schema' => 'TASY'
+        ],
         'ATENDIMENTO_PACIENTE' => [
             'control_column' => 'DT_ATUALIZACAO',
             'key_column' => 'NR_ATENDIMENTO',
