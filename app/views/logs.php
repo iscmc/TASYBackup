@@ -88,7 +88,7 @@
     <div class="container">
         <h1>Logs do Sistema</h1>
         
-        <a href="/" class="btn">Voltar ao Dashboard</a>
+        <a href="./" class="btn">Voltar ao Dashboard</a>
         
         <table>
             <thead>
