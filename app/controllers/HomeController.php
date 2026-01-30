@@ -1,10 +1,10 @@
 <?php
 /**
- * Servidor de contingência ISCMC Off frid
+ * TASYBackup - Controller da Home
+ * 
+ * Controlador principal do dashboard TASYBackup
  *
- * Este arquivo faz parte do framework MVC Projeto Contingenciamento.
- *
- * @category Framework
+ * @category Controller
  * @package  Servidor de contingência ISCMC
  * @author   Sergio Figueroa <sergio.figueroa@iscmc.com.br>
  * @license  MIT, Apache
@@ -16,25 +16,26 @@
 
 require_once __DIR__ . '/../models/BackupModel.php';
 require_once __DIR__ . '/../models/SyncModel.php';
-// REMOVER requires de UserModel e PacienteModel que não são mais necessários para auth
+require_once __DIR__ . '/../helpers/ConfigHelper.php';
 
 class HomeController {
     private $backupModel;
     private $syncModel;
+    private $configHelper;
     
     public function __construct() {
         $this->backupModel = new BackupModel();
         $this->syncModel = new SyncModel();
-        // REMOVER inicialização de UserModel e PacienteModel
+        $this->configHelper = new ConfigHelper(); // inicaliza ConfigHelper
     }
     
     public function index() {
-        // REMOVER verificação de autenticação
         try {
             $syncStatus = $this->syncModel->getSyncStatus();
             $connectionStatus = $this->backupModel->testConnections();
             $systemInfo = $this->syncModel->getSystemInfo();
-            
+            // OBTER STATUS DO FRONT-END
+            $frontendStatus = $this->configHelper->getFrontendStatus();            
             include __DIR__ . '/../views/home.php';
         } catch (Exception $e) {
             // Fallback genérico  para caso de falha
@@ -44,18 +45,51 @@ class HomeController {
             ];
             $systemInfo = [];
             $syncStatus = [];
+            $frontendStatus = 'FALSE'; // Valor padrão seguro
             
             include __DIR__ . '/../views/home.php';
         }   
     }
 
-    // REMOVER métodos de login e logout
-    // public function login() { ... }
-    // public function logout() { ... }
-    // public function searchPaciente() { ... }
+    // NOVO MÉTODO: Atualizar configuração do front-end
+    public function updateFrontendAccess() {
+        try {
+            // Verificar se é POST
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                $_SESSION['error'] = "Método não permitido";
+                header('Location: /TASYBackup/');
+                exit;
+            }
+            
+            // Validar e obter valor
+            $frontendActive = $_POST['frontend_active'] ?? 'FALSE';
+            if (!in_array($frontendActive, ['TRUE', 'FALSE'])) {
+                $_SESSION['error'] = "Valor inválido para configuração";
+                header('Location: /TASYBackup/');
+                exit;
+            }
+            
+            // Atualizar no banco
+            $success = $this->configHelper->setFrontendStatus($frontendActive === 'TRUE');
+            
+            if ($success) {
+                $_SESSION['message'] = $frontendActive === 'TRUE' 
+                    ? "Front-end bloqueado com sucesso! Usuários verão a página 'Coming Soon'." 
+                    : "Front-end liberado com sucesso! Acesso normal restaurado.";
+            } else {
+                $_SESSION['error'] = "Erro ao atualizar configuração do front-end.";
+            }
+            
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Erro: " . $e->getMessage();
+        }
+        
+        // Redirecionar de volta para a home
+        header('Location: /TASYBackup/');
+        exit;
+    }
     
     public function forceSync() {
-        // REMOVER verificação de autenticação
         try {
             $table = $_GET['table'] ?? null;
             
@@ -81,7 +115,6 @@ class HomeController {
     }
     
     public function viewLogs() {
-        // REMOVER verificação de autenticação
         $logs = $this->syncModel->getRecentLogs(50);
         include __DIR__ . '/../views/logs.php';
     }

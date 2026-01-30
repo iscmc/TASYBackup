@@ -38,7 +38,7 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        h1, h2 {
+        h1, h2, h3 {
             color: #2c3e50;
         }
         .status-box {
@@ -91,6 +91,12 @@
         .btn-danger:hover {
             background: #c0392b;
         }
+        .btn-success {
+            background: #27ae60;
+        }
+        .btn-success:hover {
+            background: #219653;
+        }
         .alert {
             padding: 15px;
             margin-bottom: 20px;
@@ -99,10 +105,12 @@
         .alert-success {
             background-color: #d4edda;
             color: #155724;
+            border: 1px solid #c3e6cb;
         }
         .alert-error {
             background-color: #f8d7da;
             color: #721c24;
+            border: 1px solid #f5c6cb;
         }
         .system-info {
             display: grid;
@@ -125,6 +133,64 @@
             color: #ff0000;
             font-weight: bold;
         }
+        
+        /* NOVOS ESTILOS PARA CONFIGURAÇÃO DO FRONT-END */
+        .frontend-config {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .config-option {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .config-option:hover {
+            background: #f8f9fa;
+        }
+        .config-option.selected {
+            background: #e8f4fd;
+            border-color: #3498db;
+        }
+        .config-option input[type="radio"] {
+            margin-right: 10px;
+        }
+        .config-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .config-description {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .config-form {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .config-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status-true {
+            background: #ffeaa7;
+            color: #d35400;
+        }
+        .status-false {
+            background: #a8e6cf;
+            color: #27ae60;
+        }
     </style>
 </head>
 <body>
@@ -143,6 +209,59 @@
             </div>
         <?php endif; ?>
         
+        <!-- NOVA SEÇÃO: Configuração do Front-end ISCMC -->
+        <div class="frontend-config">
+            <h2>Configuração do Front-end ISCMC</h2>            
+            <form method="POST" action="/TASYBackup/?action=updateFrontendAccess" class="config-form">
+                <h3>Alterar Status:</h3>
+                
+                <!-- Opção: Acesso Liberado -->
+                <div class="config-option <?= $frontendStatus === 'FALSE' ? 'selected' : '' ?>" 
+                     onclick="document.getElementById('option_false').checked = true; highlightOption(this);">
+                    <input type="radio" id="option_false" name="frontend_active" 
+                           value="FALSE" <?= $frontendStatus === 'FALSE' ? 'checked' : '' ?>>
+                    <div>
+                        <div class="config-label">
+                            <i class="fas fa-check-circle" style="color:#27ae60;"></i>
+                            Modo Contingência
+                        </div>
+                        <div class="config-description">
+                            Usuários podem acessar o Portal de Contingência normalmente. Todas as funcionalidades estarão disponíveis.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Opção: Acesso Pausado -->
+                <div class="config-option <?= $frontendStatus === 'TRUE' ? 'selected' : '' ?>" 
+                     onclick="document.getElementById('option_true').checked = true; highlightOption(this);">
+                    <input type="radio" id="option_true" name="frontend_active" 
+                           value="TRUE" <?= $frontendStatus === 'TRUE' ? 'checked' : '' ?>>
+                    <div>
+                        <div class="config-label">
+                            <i class="fas fa-ban" style="color:#e74c3c;"></i>
+                            Modo normal / Coming Soon
+                        </div>
+                        <div class="config-description">
+                            Usuários verão a página "Coming Soon". Usar quando o Tasy estiver funcionando normalmente.
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Salvar Configuração
+                    </button>
+                    <a href="http://10.132.16.43/ISCMC" target="_blank" class="btn">
+                        <i class="fas fa-external-link-alt"></i> Testar Acesso
+                    </a>
+                </div>
+                
+                <div style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                    <p><i class="fas fa-info-circle"></i> <strong>Importante:</strong> Alterações são aplicadas imediatamente.</p>
+                </div>
+            </form>
+        </div>
+        
         <div class="system-info">
             <div class="info-card">
                 <h3>Banco de Dados</h3>
@@ -155,7 +274,7 @@
                 <p><strong>Local:</strong>
                     <span class="status-<?= strtolower($connectionStatus['local']) ?>">
                         <?php echo strtoupper($connectionStatus['local']); ?>
-    </span>
+                    </span>
                 </p>
             </div>
             
@@ -172,15 +291,28 @@
             
             <div class="info-card">
                 <h3>Registros</h3>
-                <p><?php //echo $systemInfo['TOTAL_RECORDS']; ?>
                 <p><?= $systemInfo['TOTAL_RECORDS'] !== null ? number_format($systemInfo['TOTAL_RECORDS'], 0, ',', '.') : '0' ?></p>
+            </div>
+
+            <div class="info-card">
+                <h3>Acesso ao Portal</h3>
+                <p><strong>Status atual:</strong> 
+                    <span class="config-status status-<?= $frontendStatus ?>">
+                        <?= $frontendStatus === 'TRUE' ? 'NORMAL' : 'CONTINGÊNCIA' ?>
+                    </span>
+                </p>
+                <p class="config-description">
+                    <?= $frontendStatus === 'TRUE' 
+                        ? 'Usuários estão vendo a página "Coming Soon".' 
+                        : 'Usuários podem acessar o portal normalmente.' ?>
+                </p>
             </div>
         </div>
         
         <div class="status-box">
             <h2>Ações Rápidas</h2>
-            <a href="?action=forceSync" class="btn">Forçar Sincronização Completa</a>
-            <a href="?action=viewLogs" class="btn">Ver Logs</a>
+            <a href="/TASYBackup/?action=forceSync" class="btn">Forçar Sincronização Completa</a>
+            <a href="/TASYBackup/?action=viewLogs" class="btn">Ver Logs</a>
         </div>
         
         <div class="status-box">
@@ -204,7 +336,7 @@
                         <td><span class="status-<?= strtolower($table['STATUS']) ?>">
                             <?= $table['STATUS'] ?></span></td>
                         <td>
-                            <a href="?action=forceSync&table=<?= $table['TABLE_NAME'] ?>" class="btn">Sincronizar</a>
+                            <a href="/TASYBackup/?action=forceSync&table=<?= $table['TABLE_NAME'] ?>" class="btn">Sincronizar</a>
                             <?php if ($table['STATUS'] == 'ACTIVE'): ?>
                                 <a href="#" class="btn btn-danger">Desativar</a>
                             <?php else: ?>
@@ -215,25 +347,64 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
-
-            <?php 
-            /* REMOVER seção de autenticação
-            <?php if (isset($_SESSION['user'])): ?>
-            <div class="user-actions">
-                <h3>Consultas</h3>
-                <a href="/TASYBackup/patients" class="btn">Consultar Pacientes</a>
-                <a href="/TASYBackup/logout" class="btn">Sair</a>
-            </div>
-            <?php endif; ?>
-            */ ?>
-
-            <!-- Adicionar acesso direto às consultas -->
-            <div class="user-actions">
-                <h3>Consultas</h3>
-                <a href="/TASYBackup/patients" class="btn">Consultar Pacientes</a>
-            </div>
-
+        </div>
+        
+        <!-- Adicionar acesso direto às consultas -->
+        <div class="user-actions">
+            <h3>Consultas</h3>
+            <a href="/TASYBackup/patients" class="btn">Consultar Pacientes</a>
         </div>
     </div>
+    
+    <!-- Script para melhorar a interação dos radio buttons -->
+    <script>
+        function highlightOption(element) {
+            // Remove seleção de todos os options
+            document.querySelectorAll('.config-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            // Adiciona seleção ao clicado
+            element.classList.add('selected');
+        }
+        
+        // Configurar evento de clique nos radio buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const radioButtons = document.querySelectorAll('input[name="frontend_active"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Remove seleção de todos
+                    document.querySelectorAll('.config-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    // Seleciona o pai do radio button
+                    if (this.checked) {
+                        this.closest('.config-option').classList.add('selected');
+                    }
+                });
+                
+                // Configurar estado inicial
+                if (radio.checked) {
+                    radio.closest('.config-option').classList.add('selected');
+                }
+            });
+            
+            // Confirmação para bloquear acesso
+            const form = document.querySelector('.config-form');
+            form.addEventListener('submit', function(e) {
+                const selectedValue = document.querySelector('input[name="frontend_active"]:checked').value;
+                
+                if (selectedValue === 'TRUE') {
+                    if (!confirm('ATENÇÃO: Você está prestes a BLOQUEAR o acesso ao Portal de Contingência ISCMC.\n\n' +
+                                'Todos os usuários verão a página uma página de aviso de "Tasy funcionando Ok".\n\n' +
+                                'Deseja continuar?')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        });
+    </script>
+    
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </body>
 </html>

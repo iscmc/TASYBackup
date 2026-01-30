@@ -31,7 +31,7 @@ class DatabaseConfig {
         'port' => '1521',
         'sid' => 'XE',
         'user' => 'SYSTEM',
-        'pass' => 'K@t7y317',
+        'pass' => 'K@t7y318',
         'charset' => 'AL32UTF8'
     ];
 
@@ -185,5 +185,29 @@ class DatabaseConfig {
             'time_limit' => $limiteTempo,
             'query_example' => "SELECT * FROM {$config['schema']}.{$tableName} WHERE {$config['control_column']} >= TO_TIMESTAMP('{$limiteTempo}', 'DD-MON-YYYY HH24:MI:SS')"
         ];
+    }
+
+    // utiliza uma única função para gerar o objeto para conectar de forma local
+    public static function getLocalConnection() {
+        try {
+            $tns = "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=" . self::$localDb['host'] . ")(PORT=" . self::$localDb['port'] . "))(CONNECT_DATA=(SID=" . self::$localDb['sid'] . ")))";
+            
+            $conn = oci_connect(
+                self::$localDb['user'],
+                self::$localDb['pass'],
+                $tns,
+                self::$localDb['charset']
+            );
+            
+            if (!$conn) {
+                $error = oci_error();
+                throw new Exception("Erro ao conectar ao Oracle XE: " . $error['message']);
+            }
+            
+            return $conn;
+        } catch (Exception $e) {
+            error_log("DatabaseConfig getLocalConnection error: " . $e->getMessage());
+            throw $e;
+        }
     }
 }
