@@ -133,6 +133,12 @@ class DatabaseConfig {
             'sync_hours' => 72,
             'schema' => 'TASY'
         ],
+        'PRESCR_MEDICA' => [
+            'control_column' => 'DT_ATUALIZACAO',
+            'key_column' => 'NR_PRESCRICAO',
+            'sync_hours' => 72,
+            'schema' => 'TASY'
+        ],
         'CPOE_ANATOMIA_PATOLOGICA' => [
             'control_column' => 'DT_ATUALIZACAO',
             'key_column' => 'NR_SEQUENCIA',
