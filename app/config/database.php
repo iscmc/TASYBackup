@@ -139,6 +139,12 @@ class DatabaseConfig {
             'sync_hours' => 72,
             'schema' => 'TASY'
         ],
+        'EVOLUCAO_PACIENTE' => [
+            'control_column' => 'DT_ATUALIZACAO',
+            'key_column' => 'CD_EVOLUCAO',
+            'sync_hours' => 72,
+            'schema' => 'TASY'
+        ],
         'CPOE_ANATOMIA_PATOLOGICA' => [
             'control_column' => 'DT_ATUALIZACAO',
             'key_column' => 'NR_SEQUENCIA',
