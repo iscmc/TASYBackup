@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentacao Tecnica - TASYBackup</title>
+    <title>Documentação Tecnica - TASYBackup</title>
+    <meta name="author" content="Equipe de TI Sistemas da ISCMC">
+    <link rel="icon" type="image/x-icon" href="assets/img/icone-site.png">
     <style>
         :root {
             --bg: #f4f1ea;
@@ -29,7 +31,11 @@
                 radial-gradient(circle at top right, rgba(47, 111, 94, 0.08), transparent 26%),
                 linear-gradient(180deg, #f8f5ef 0%, var(--bg) 100%);
             color: var(--ink);
-            line-height: 1.6;
+            line-height: 1.4;
+        }
+
+        p, ol, ul {
+            font-size: 0.875rem;
         }
 
         .hero {
@@ -47,7 +53,7 @@
 
         .hero h1 {
             margin: 0 0 10px;
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             line-height: 1.1;
             letter-spacing: -0.03em;
         }
@@ -56,7 +62,7 @@
             max-width: 850px;
             margin: 0;
             color: rgba(255, 248, 242, 0.88);
-            font-size: 1.05rem;
+            font-size: 0.875rem;
         }
 
         .meta {
@@ -72,7 +78,7 @@
             border: 1px solid rgba(255, 255, 255, 0.18);
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.08);
-            font-size: 0.92rem;
+            font-size: 0.75rem;
         }
 
         .container {
@@ -94,7 +100,7 @@
 
         .toc h2,
         section h2 {
-            margin: 0 0 14px;
+            margin: 0 0 10px;
             font-size: 1.35rem;
             letter-spacing: -0.02em;
         }
@@ -115,7 +121,7 @@
             margin-top: 26px;
             margin-bottom: 10px;
             color: var(--accent);
-            font-size: 1.05rem;
+            font-size: 0.875rem;
         }
 
         p,
@@ -132,6 +138,7 @@
         code,
         pre {
             font-family: Consolas, "Courier New", monospace;
+            font-size: 0.75rem;
         }
 
         code {
@@ -158,11 +165,12 @@
             overflow: hidden;
             border-radius: 12px;
             border: 1px solid var(--line);
+            font-size: 0.875rem;
         }
 
         th,
         td {
-            padding: 12px 14px;
+            padding: 10px;
             border-bottom: 1px solid var(--line);
             text-align: left;
             vertical-align: top;
@@ -215,7 +223,7 @@
         .footer {
             margin-top: 18px;
             color: var(--muted);
-            font-size: 0.95rem;
+            font-size: 0.75rem;
         }
 
         @media (max-width: 900px) {
@@ -233,16 +241,12 @@
     <header class="hero">
         <div class="hero-inner">
             <h1>Sistema de Contingência TASY Backup</h1>
-            <p>
-                Documentacao tecnica de desenvolvedor do sistema de contingencia hospitalar, responsavel por sincronizar
-                dados do TASY Oracle 19C para o Oracle 21C XE local, suportando operacao web manual e execucao automatica
-                como servico Windows via NSSM.
-            </p>
+            <p>Documentação técnica de desenvolvedor do sistema de contingência hospitalar, responsável por sincronizar dados do TASY Oracle 19C para o Oracle 21C XE local, suportando operação web manual e execução automática como serviço Windows via NSSM.</p>
             <div class="meta">
-                <span>Projeto: Contingencia Hospitalar ISCMC</span>
-                <span>Ambiente alvo: Windows Server 2019 + IIS 10</span>
-                <span>Atualizado apos refatoracao de estabilizacao em 19/03/2026</span>
-                <span>Autor: Sergio Figueroa, Eng. em Sist. da Informação ISCMC</span>
+                <span>Projeto: Contingência Hospitalar ISCMC</span>
+                <span>Ambiente: Windows Server 2019 + IIS 10</span>
+                <span>Atualizado após refatoração de estabilização em 19/03/2026</span>
+                <span>Autor: Sergio Figueroa - Eng. em Sist. da Informação ISCMC</span>
             </div>
         </div>
     </header>
@@ -252,19 +256,19 @@
             <h2>Indice</h2>
             <ul>
                 <li><a href="#visao-geral">1. Visao Geral</a></li>
-                <li><a href="#objetivo-negocio">2. Objetivo de Negocio</a></li>
+                <li><a href="#objetivo-negócio">2. Objetivo de Negócio</a></li>
                 <li><a href="#arquitetura">3. Arquitetura</a></li>
                 <li><a href="#estrutura">4. Estrutura do Projeto</a></li>
                 <li><a href="#bancos">5. Bancos de Dados e Tabelas de Controle</a></li>
-                <li><a href="#politica-sync">6. Politica de Sincronizacao por Tabela</a></li>
+                <li><a href="#politica-sync">6. Política de Sincronização por Tabela</a></li>
                 <li><a href="#fluxo-web">7. Fluxo Manual via Dashboard</a></li>
                 <li><a href="#fluxo-servico">8. Fluxo do Servico Automatico</a></li>
                 <li><a href="#upsert">9. Estrategia de Upsert e Commit por Lote</a></li>
                 <li><a href="#arquivos-principais">10. Arquivos Principais</a></li>
-                <li><a href="#operacao">11. Operacao e Rotinas</a></li>
-                <li><a href="#validacao">12. Validacao Executada</a></li>
-                <li><a href="#troubleshooting">13. Troubleshooting</a></li>
-                <li><a href="#seguranca">14. Seguranca e Pendencias Tecnicas</a></li>
+                <li><a href="#operação">11. Operação e Rotinas</a></li>
+                <li><a href="#validação">12. Validação Executada</a></li>
+                <li><a href="#troubleshooting">13. Solução de Problemas</a></li>
+                <li><a href="#seguranca">14. Segurança e Pendencias Tecnicas</a></li>
                 <li><a href="#evolucao">15. Recomendacoes de Evolucao</a></li>
             </ul>
         </nav>
@@ -272,9 +276,9 @@
         <section id="visao-geral">
             <h2>1. Visao Geral</h2>
             <p>
-                O <strong>TASYBackup</strong> e uma aplicacao PHP em estilo MVC simples, hospedada no IIS, utilizada
+                O <strong>TASYBackup</strong> e uma aplicação PHP em estilo MVC simples, hospedada no IIS, utilizada
                 para copiar dados clinicos e cadastrais do banco Oracle de producao do TASY para um banco Oracle XE local.
-                O objetivo e sustentar um ambiente de contingencia hospitalar offline/local, consumido principalmente pelo
+                O objetivo e sustentar um ambiente de contingência hospitalar offline/local, consumido principalmente pelo
                 portal <code>ISCMC</code>.
             </p>
             <div class="grid">
@@ -292,31 +296,31 @@
                 </div>
                 <div class="card">
                     <strong>Escopo atual</strong>
-                    <p class="muted">Sincronizacao de dados + controle da tabela <code>CONFIG</code> para contingencia.</p>
+                    <p class="muted">Sincronização de dados + controle da tabela <code>CONFIG</code> para contingência.</p>
                 </div>
             </div>
         </section>
 
-        <section id="objetivo-negocio">
-            <h2>2. Objetivo de Negocio</h2>
+        <section id="objetivo-negócio">
+            <h2>2. Objetivo de Negócio</h2>
             <p>O sistema atende tres objetivos principais:</p>
             <ol>
-                <li>Disponibilizar no Oracle XE local um espelho operacional dos dados criticos das ultimas 72 horas.</li>
+                <li>Disponibilizar no Oracle XE local um espelho operacional dos dados críticos das últimas 72 horas.</li>
                 <li>Manter historico acumulado completo de tabelas mestre essenciais ao contexto assistencial e administrativo.</li>
-                <li>Permitir que o portal <code>ISCMC</code> continue funcionando localmente em contingencia, inclusive sem dependencia de internet.</li>
+                <li>Permitir que o portal <code>ISCMC</code> continue funcionando localmente em contingência, inclusive sem dependencia de internet.</li>
             </ol>
 
-            <h3>Relacao com o portal ISCMC</h3>
+            <h3>Relação com o portal ISCMC</h3>
             <p>
                 O portal <code>ISCMC</code>, hospedado em outra pasta do mesmo IIS, consome o mesmo schema
                 <code>SYSTEM</code> do Oracle XE local. Por isso, a consistencia do TASYBackup impacta diretamente a
-                disponibilidade das informacoes criticas vistas pelos usuarios no portal de contingencia.
+                disponibilidade das informacoes criticas vistas pelos usuários no <a href="http://10.132.16.43/ISCMC" target="_blank">Portal de Contingência</a>.
             </p>
         </section>
 
         <section id="arquitetura">
             <h2>3. Arquitetura</h2>
-            <pre>Usuario / Agendamento
+            <pre>Usuário / Agendamento
         |
         +--> Dashboard Web (IIS)
         |        |
@@ -341,10 +345,10 @@ BackupModel
 
             <h3>Caracteristicas arquiteturais</h3>
             <ul>
-                <li>Aplicacao sem framework externo pesado; bootstrap e roteamento sao proprios.</li>
-                <li>Persistencia via OCI8, sem ORM.</li>
-                <li>Sincronizacao configurada por metadados em <code>app/config/database.php</code>.</li>
-                <li>Fluxo manual e fluxo automatico compartilham o mesmo nucleo funcional de sincronizacao.</li>
+                <li>Aplicação sem framework externo pesado; bootstrap e roteamento são próprios.</li>
+                <li>Persistência via OCI8, sem ORM.</li>
+                <li>Sincronização configurada por metadados em <code>app/config/database.php</code>.</li>
+                <li>Fluxo manual e fluxo automático compartilham o mesmo nucleo funcional de sincronização.</li>
             </ul>
         </section>
 
@@ -368,7 +372,7 @@ BackupModel
                     </tr>
                     <tr>
                         <td><code>app/controllers/HomeController.php</code></td>
-                        <td>Dashboard, disparo manual de sincronizacao e controle de configuracao do front-end.</td>
+                        <td>Dashboard, disparo manual de sincronização e controle de configuração do front-end.</td>
                     </tr>
                     <tr>
                         <td><code>app/models/BackupModel.php</code></td>
@@ -380,15 +384,15 @@ BackupModel
                     </tr>
                     <tr>
                         <td><code>app/helpers/ConfigHelper.php</code></td>
-                        <td>Leitura e atualizacao da tabela <code>CONFIG</code>.</td>
+                        <td>Leitura e atualização da tabela <code>CONFIG</code>.</td>
                     </tr>
                     <tr>
                         <td><code>services/BackupService.php</code></td>
-                        <td>Servico automatico para sincronizacao continua via NSSM.</td>
+                        <td>Servico automatico para sincronização continua via NSSM.</td>
                     </tr>
                     <tr>
                         <td><code>install_service.bat</code></td>
-                        <td>Instalacao e configuracao do servico Windows.</td>
+                        <td>Instalação e configuração do servico Windows.</td>
                     </tr>
                     <tr>
                         <td><code>validate_manual_sync.php</code></td>
@@ -396,7 +400,7 @@ BackupModel
                     </tr>
                     <tr>
                         <td><code>logs/</code></td>
-                        <td>Logs da aplicacao, do servico e diagnosticos operacionais.</td>
+                        <td>Logs da aplicação, do servico e diagnósticos operacionais.</td>
                     </tr>
                 </tbody>
             </table>
@@ -426,27 +430,27 @@ BackupModel
                     </tr>
                     <tr>
                         <td><code>TASY_SYNC_LOGS</code></td>
-                        <td>Armazena registros resumidos das sincronizacoes executadas.</td>
+                        <td>Armazena registros resumidos das sincronizações executadas.</td>
                     </tr>
                     <tr>
                         <td><code>CONFIG</code></td>
-                        <td>Armazena sinalizadores de contingencia, inclusive <code>FRONTEND_ACTIVE</code>.</td>
+                        <td>Armazena sinalizadores de contingência, inclusive <code>FRONTEND_ACTIVE</code>.</td>
                     </tr>
                 </tbody>
             </table>
 
             <h3>Premissas importantes</h3>
             <ul>
-                <li>As tabelas de negocio de destino ja existem no XE, com a mesma estrutura da origem.</li>
-                <li>O projeto nao cria tabelas de negocio; ele apenas insere e atualiza.</li>
+                <li>As tabelas de negócio de destino ja existem no XE, com a mesma estrutura da origem.</li>
+                <li>O projeto não cria tabelas de negócio; ele apenas insere e atualiza.</li>
                 <li>As chaves fisicas entre <code>PESSOA_FISICA</code> e <code>COMPL_PESSOA_FISICA</code> foram desativadas no XE por performance.</li>
             </ul>
         </section>
 
         <section id="politica-sync">
-            <h2>6. Politica de Sincronizacao por Tabela</h2>
+            <h2>6. Politica de Sincronização por Tabela</h2>
             <p>
-                A politica de sincronizacao esta centralizada em <code>app/config/database.php</code>. Cada tabela possui
+                A politica de sincronização esta centralizada em <code>app/config/database.php</code>. Cada tabela possui
                 metadados como <code>control_column</code>, <code>key_column</code>, <code>key_columns</code>,
                 <code>sync_hours</code>, <code>retention_mode</code>, <code>sync_priority</code> e, quando necessario,
                 <code>batch_size</code>.
@@ -467,7 +471,7 @@ BackupModel
                     <tr><td><code>COMPL_PESSOA_FISICA</code></td><td>Complemento cadastral com chave composta</td><td><span class="badge ok">full</span></td></tr>
                     <tr><td><code>SETOR_ATENDIMENTO</code></td><td>Dimensao organizacional</td><td><span class="badge ok">full</span></td></tr>
                     <tr><td><code>UNIDADE_ATENDIMENTO</code></td><td>Dimensao operacional</td><td><span class="badge ok">full</span></td></tr>
-                    <tr><td><code>USUARIO</code></td><td>Identidade local e autenticacao</td><td><span class="badge ok">full</span></td></tr>
+                    <tr><td><code>USUARIO</code></td><td>Identidade local e autenticação</td><td><span class="badge ok">full</span></td></tr>
                 </tbody>
             </table>
 
@@ -477,9 +481,9 @@ BackupModel
                 alterados dentro da janela de 72 horas e aplicam purge local dos dados anteriores a esse intervalo.
             </p>
 
-            <h3>Ordem de sincronizacao</h3>
+            <h3>Ordem de sincronização</h3>
             <p>
-                A ordem e definida por <code>sync_priority</code>. A sincronizacao prioriza cadastros mestre antes das
+                A ordem e definida por <code>sync_priority</code>. A sincronização prioriza cadastros mestre antes das
                 tabelas transacionais, reduzindo riscos de dependencia logica.
             </p>
         </section>
@@ -501,24 +505,24 @@ BackupModel
 
             <h3>Comportamento operacional</h3>
             <ul>
-                <li>O dashboard permite disparar sincronizacao por tabela ou sincronizacao completa.</li>
+                <li>O dashboard permite disparar sincronização por tabela ou sincronização completa.</li>
                 <li>O metodo <code>forceSync()</code> do <code>HomeController</code> utiliza o fluxo estabilizado do <code>SyncModel</code>.</li>
-                <li>O controle de disponibilidade do front-end de contingencia e feito em paralelo pela tabela <code>CONFIG</code>.</li>
+                <li>O controle de disponibilidade do front-end de contingência e feito em paralelo pela tabela <code>CONFIG</code>.</li>
             </ul>
 
             <h3>Quando usar o fluxo manual</h3>
             <ul>
-                <li>Teste operacional apos manutencao.</li>
-                <li>Sincronizacao pontual de tabela especifica.</li>
+                <li>Teste operacional após manutencao.</li>
+                <li>Sincronização pontual de tabela especifica.</li>
                 <li>Diagnostico de divergencia de dados.</li>
-                <li>Validacao antes de liberar o servico automatico.</li>
+                <li>Validação antes de liberar o servico automatico.</li>
             </ul>
         </section>
 
         <section id="fluxo-servico">
             <h2>8. Fluxo do Servico Automatico</h2>
 
-            <h3>Implementacao atual</h3>
+            <h3>Implementação atual</h3>
             <p>
                 O servico foi refatorado para reutilizar exatamente o mesmo fluxo funcional do dashboard manual. Ele nao
                 chama mais metodos legados inexistentes.
@@ -532,11 +536,11 @@ BackupModel
 
             <h3>Caracteristicas do servico</h3>
             <ul>
-                <li>Loop continuo com retry configuravel.</li>
-                <li>Modo <code>--once</code> para validacao controlada.</li>
+                <li>Loop contínuo com retry configuravel.</li>
+                <li>Modo <code>--once</code> para validação controlada.</li>
                 <li>Modo <code>--table=NOME_TABELA</code> para teste de tabela unica.</li>
                 <li>Logs em arquivo <code>logs/sync.log</code>.</li>
-                <li>Instalacao como servico Windows via NSSM por <code>install_service.bat</code>.</li>
+                <li>Instalação como servico Windows via NSSM por <code>install_service.bat</code>.</li>
             </ul>
 
             <h3>Exemplos</h3>
@@ -550,9 +554,9 @@ php services/BackupService.php --interval=900 --retry=60</pre>
 
             <h3>Modelo atual</h3>
             <ul>
-                <li>Busca incremental por <code>DT_ATUALIZACAO</code> ou coluna de controle equivalente.</li>
-                <li>Aplicacao de filtros de chave para evitar registros sem identificador util.</li>
-                <li>Processamento com <code>UPDATE</code> seguido de <code>INSERT</code> quando necessario.</li>
+                <li>Busca incremental por <code>DT_ATUALIZação</code> ou coluna de controle equivalente.</li>
+                <li>Aplicação de filtros de chave para evitar registros sem identificador útil.</li>
+                <li>Processamento com <code>UPDATE</code> seguido de <code>INSERT</code> quando necessário.</li>
                 <li>Fallback para conflito de unicidade com nova tentativa de <code>UPDATE</code>.</li>
                 <li>Commit por lote no banco local.</li>
             </ul>
@@ -561,14 +565,14 @@ php services/BackupService.php --interval=900 --retry=60</pre>
             <p>
                 Para tabelas de maior volume, como <code>PESSOA_FISICA</code>, <code>COMPL_PESSOA_FISICA</code> e
                 <code>EVOLUCAO_PACIENTE</code>, o sistema usa processamento em lote com leitura em streaming do cursor
-                Oracle. Essa estrategia substituiu a paginacao por <code>OFFSET/FETCH</code>, que se mostrou cara para
+                Oracle. Essa estrategia substituiu a paginação por <code>OFFSET/FETCH</code>, que se mostrou muito pesada para
                 tabelas muito grandes.
             </p>
 
             <h3>Chave composta</h3>
             <p>
                 <code>COMPL_PESSOA_FISICA</code> usa <code>CD_PESSOA_FISICA + NR_SEQUENCIA</code> como chave de
-                sincronizacao. O bind OCI foi corrigido para nao reaproveitar indevidamente variaveis de loop, evitando
+                sincronização. O bind OCI foi corrigido para não reaproveitar indevidamente variaveis de loop, evitando
                 falsos <code>ORA-00001</code>.
             </p>
         </section>
@@ -576,18 +580,18 @@ php services/BackupService.php --interval=900 --retry=60</pre>
         <section id="arquivos-principais">
             <h2>10. Arquivos Principais</h2>
 
-            <h3>Configuracao</h3>
+            <h3>Configuração</h3>
             <ul>
-                <li><code>app/config/database.php</code>: fonte oficial de configuracao de conexao e metadados por tabela.</li>
-                <li><code>app/config/databaseConfig.php</code>: shim de compatibilidade para codigo legado.</li>
+                <li><code>app/config/database.php</code>: fonte oficial de configuração de conexao e metadados por tabela - CONFIDENCIAL.</li>
+                <li><code>app/config/databaseConfig.php</code>: intermediário de compatibilidade (shim) para código legado.</li>
             </ul>
 
             <h3>Modelos centrais</h3>
             <ul>
-                <li><code>BackupModel.php</code>: sincronizacao, conexoes, retencao, logs e diagnosticos.</li>
-                <li><code>SyncModel.php</code>: interface operacional para dashboard e servico.</li>
-                <li><code>DatabaseConnection.php</code>: helper auxiliar de conexao reutilizado por pontos legados.</li>
-                <li><code>UserModel.php</code>: autenticacao local baseada em tabela <code>USUARIO</code>.</li>
+                <li><code>BackupModel.php</code>: sincronização, conexões, retenção, logs e diagnósticos.</li>
+                <li><code>SyncModel.php</code>: interface operacional para dashboard e serviço.</li>
+                <li><code>DatabaseConnection.php</code>: helper auxiliar de conexão, reutilizado por pontos legados.</li>
+                <li><code>UserModel.php</code>: autenticação local baseada em tabela <code>USUARIO</code>.</li>
             </ul>
 
             <h3>Scripts auxiliares</h3>
@@ -599,14 +603,14 @@ php services/BackupService.php --interval=900 --retry=60</pre>
             </ul>
         </section>
 
-        <section id="operacao">
-            <h2>11. Operacao e Rotinas</h2>
+        <section id="operação">
+            <h2>11. Operação e Rotinas</h2>
 
-            <h3>Rotina recomendada de operacao</h3>
+            <h3>Rotina recomendada de operação</h3>
             <ol>
                 <li>Validar conexoes e ambiente PHP/OCI8.</li>
-                <li>Executar sincronizacao manual de tabela quando houver manutencao ou investigacao.</li>
-                <li>Manter o servico automatico em execucao continua para operacao normal.</li>
+                <li>Executar sincronização manual de tabela quando houver manutencao ou investigação.</li>
+                <li>Manter o servico automatico em execucao continua para operação normal.</li>
                 <li>Monitorar logs e tamanho das tabelas rolling.</li>
             </ol>
 
@@ -622,21 +626,21 @@ net stop "TASYBackupService"</pre>
 
             <h3>Arquivos de log importantes</h3>
             <ul>
-                <li><code>logs/error.log</code>: logs operacionais e diagnosticos de aplicacao.</li>
+                <li><code>logs/error.log</code>: logs operacionais e diagnosticos de aplicação.</li>
                 <li><code>logs/sync.log</code>: logs resumidos do servico.</li>
                 <li><code>logs/service_stdout.log</code>: saida padrao do processo do servico.</li>
                 <li><code>logs/service_stderr.log</code>: erros do processo do servico.</li>
             </ul>
         </section>
 
-        <section id="validacao">
-            <h2>12. Validacao Executada</h2>
+        <section id="validação">
+            <h2>12. Validação Executada</h2>
             <p>
-                A base desta documentacao considera a refatoracao e a validacao funcional realizadas diretamente no
+                A base desta documentação considera a refatoração e a validação funcional realizadas diretamente no
                 ambiente com Oracle real. O fluxo manual foi estabilizado e validado tabela a tabela.
             </p>
 
-            <h3>Status apos estabilizacao</h3>
+            <h3>Status após estabilização</h3>
             <ul>
                 <li><span class="badge ok">OK</span> Fluxo manual funcional nas tabelas full e rolling configuradas.</li>
                 <li><span class="badge ok">OK</span> <code>PESSOA_FISICA</code> validada com commit por lote.</li>
@@ -648,29 +652,29 @@ net stop "TASYBackupService"</pre>
         </section>
 
         <section id="troubleshooting">
-            <h2>13. Troubleshooting</h2>
+            <h2>13. Solução de Problemas</h2>
 
-            <h3>Servico nao inicia com erro especifico 3</h3>
+            <h3>Servico não inicia com erro especifico 3</h3>
             <ul>
                 <li>Causa tipica: <code>AppDirectory</code> invalido no NSSM.</li>
                 <li>Verificar: <code>nssm get TASYBackupService AppDirectory</code>.</li>
-                <li>Corrigir: reinstalar via <code>install_service.bat</code> em prompt elevado.</li>
+                <li>Corrigir: reinstalar via <code>install_service.bat</code> em prompt elevado como administrador.</li>
             </ul>
 
             <h3>ORA-00001 em COMPL_PESSOA_FISICA</h3>
             <ul>
                 <li>Historicamente causado por bind incorreto de chave composta.</li>
-                <li>Validar se a configuracao de <code>key_columns</code> continua correta.</li>
+                <li>Validar se a configuração de <code>key_columns</code> continua correta.</li>
             </ul>
 
-            <h3>Sincronizacao muito lenta em tabelas grandes</h3>
+            <h3>Sincronização muito lenta em tabelas grandes</h3>
             <ul>
                 <li>Verificar se a tabela esta configurada com <code>batch_size</code>.</li>
-                <li>Evitar paginacao por <code>OFFSET/FETCH</code> para tabelas muito volumosas.</li>
+                <li>Evitar paginação por <code>OFFSET/FETCH</code> para tabelas muito volumosas.</li>
                 <li>Usar scripts de debug para identificar se o gargalo esta no fetch ou no processamento.</li>
             </ul>
 
-            <h3>Dashboard funciona e servico nao</h3>
+            <h3>Dashboard funciona e servico não</h3>
             <ul>
                 <li>Comparar logs do servico com <code>logs/error.log</code>.</li>
                 <li>Testar primeiro com <code>php services/BackupService.php --once --table=USUARIO</code>.</li>
@@ -678,38 +682,38 @@ net stop "TASYBackupService"</pre>
         </section>
 
         <section id="seguranca">
-            <h2>14. Seguranca e Pendencias Tecnicas</h2>
+            <h2>14. Segurança e Pendências Técnicas</h2>
 
             <h3>Riscos ainda presentes</h3>
             <ul>
-                <li><span class="badge warn">Atencao</span> Credenciais de banco ainda estao no codigo em <code>database.php</code>.</li>
+                <li><span class="badge warn">Atencao</span> Credenciais de banco ainda estao no código em <code>database.php</code>.</li>
                 <li><span class="badge warn">Atencao</span> Existem scripts auxiliares e testes no raiz que devem ser tratados como utilitarios internos.</li>
-                <li><span class="badge warn">Atencao</span> O projeto ainda possui pontos legados fora do fluxo principal que merecem padronizacao futura.</li>
+                <li><span class="badge warn">Atencao</span> O projeto ainda possui pontos legados fora do fluxo principal que merecem padronização futura.</li>
             </ul>
 
-            <h3>Melhorias recomendadas de seguranca</h3>
+            <h3>Melhorias recomendadas de segurança</h3>
             <ul>
                 <li>Mover credenciais para variaveis de ambiente ou arquivo fora do repositório.</li>
-                <li>Criar usuario Oracle dedicado no XE em vez de operar permanentemente com <code>SYSTEM</code>.</li>
-                <li>Revisar permissoes do IIS e do usuario do servico.</li>
+                <li>Criar usuário Oracle dedicado no XE em vez de operar permanentemente com <code>SYSTEM</code>.</li>
+                <li>Revisar permissões do IIS e do usuário do servico.</li>
                 <li>Restringir exposicao publica de scripts utilitarios e de debug.</li>
             </ul>
         </section>
 
         <section id="evolucao">
-            <h2>15. Recomendacoes de Evolucao</h2>
+            <h2>15. Recomendações para Evolução do Sistema</h2>
             <ol>
-                <li>Substituir credenciais hardcoded por configuracao segura externa ao codigo.</li>
+                <li>Substituir credenciais hardcoded por configuração segura externa ao código.</li>
                 <li>Padronizar logs em formato estruturado unico.</li>
                 <li>Implementar health-check de servico e alertas basicos.</li>
                 <li>Avaliar uso de <code>MERGE</code> em lote no Oracle para tabelas transacionais maiores.</li>
-                <li>Separar scripts de debug e validacao em uma pasta <code>tools/</code> ou <code>scripts/</code>.</li>
-                <li>Adicionar documentacao complementar para operacao do portal <code>ISCMC</code> em contingencia.</li>
+                <li>Separar scripts de debug e validação em uma pasta <code>tools/</code> ou <code>scripts/</code>.</li>
+                <li>Adicionar documentação complementar para operação do portal <code>ISCMC</code> em contingência.</li>
             </ol>
 
             <p class="footer">
-                Documento gerado para fins de manutencao, continuidade operacional e registro tecnico do sistema de
-                contingencia hospitalar TASYBackup.
+                Documentação da equipe de TI Sistemas da ISCMC para fins de manutencao, continuidade operacional e registro tecnico do sistema de
+                contingência hospitalar TASYBackup.
             </p>
         </section>
     </main>
