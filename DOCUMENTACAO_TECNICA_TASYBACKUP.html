@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentacao Tecnica - TASYBackup</title>
+    <style>
+        :root {
+            --bg: #f4f1ea;
+            --panel: #fffdf8;
+            --ink: #1f2933;
+            --muted: #52606d;
+            --line: #d9d2c3;
+            --accent: #9b2c2c;
+            --accent-2: #2f6f5e;
+            --code: #f2ede3;
+            --shadow: 0 18px 40px rgba(43, 37, 30, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(155, 44, 44, 0.08), transparent 28%),
+                radial-gradient(circle at top right, rgba(47, 111, 94, 0.08), transparent 26%),
+                linear-gradient(180deg, #f8f5ef 0%, var(--bg) 100%);
+            color: var(--ink);
+            line-height: 1.6;
+        }
+
+        .hero {
+            padding: 56px 24px 36px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            background: linear-gradient(135deg, rgba(155, 44, 44, 0.95), rgba(85, 35, 35, 0.92));
+            color: #fff8f2;
+        }
+
+        .hero-inner,
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 2.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+        }
+
+        .hero p {
+            max-width: 850px;
+            margin: 0;
+            color: rgba(255, 248, 242, 0.88);
+            font-size: 1.05rem;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .meta span {
+            display: inline-block;
+            padding: 7px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            font-size: 0.92rem;
+        }
+
+        .container {
+            padding: 28px 24px 60px;
+        }
+
+        .toc,
+        section {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .toc {
+            padding: 22px 24px;
+            margin-bottom: 22px;
+        }
+
+        .toc h2,
+        section h2 {
+            margin: 0 0 14px;
+            font-size: 1.35rem;
+            letter-spacing: -0.02em;
+        }
+
+        .toc ul {
+            columns: 2;
+            gap: 28px;
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        section {
+            padding: 26px 24px;
+            margin-bottom: 22px;
+        }
+
+        h3 {
+            margin-top: 26px;
+            margin-bottom: 10px;
+            color: var(--accent);
+            font-size: 1.05rem;
+        }
+
+        p,
+        li {
+            color: var(--ink);
+        }
+
+        ul,
+        ol {
+            margin-top: 8px;
+            padding-left: 22px;
+        }
+
+        code,
+        pre {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        code {
+            padding: 2px 6px;
+            border-radius: 6px;
+            background: var(--code);
+            color: #6b1f1f;
+        }
+
+        pre {
+            margin: 14px 0;
+            padding: 16px;
+            overflow-x: auto;
+            border-radius: 14px;
+            background: #201b18;
+            color: #f9f2e8;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #efe7db;
+            color: #472d2d;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge.ok {
+            background: rgba(47, 111, 94, 0.12);
+            color: var(--accent-2);
+        }
+
+        .badge.warn {
+            background: rgba(155, 44, 44, 0.12);
+            color: var(--accent);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: #fffaf2;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .footer {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 900px) {
+            .toc ul {
+                columns: 1;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-inner">
+            <h1>Sistema de Contingência TASY Backup</h1>
+            <p>
+                Documentacao tecnica de desenvolvedor do sistema de contingencia hospitalar, responsavel por sincronizar
+                dados do TASY Oracle 19C para o Oracle 21C XE local, suportando operacao web manual e execucao automatica
+                como servico Windows via NSSM.
+            </p>
+            <div class="meta">
+                <span>Projeto: Contingencia Hospitalar ISCMC</span>
+                <span>Ambiente alvo: Windows Server 2019 + IIS 10</span>
+                <span>Atualizado apos refatoracao de estabilizacao em 19/03/2026</span>
+                <span>Autor: Sergio Figueroa, Eng. em Sist. da Informação ISCMC</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <nav class="toc">
+            <h2>Indice</h2>
+            <ul>
+                <li><a href="#visao-geral">1. Visao Geral</a></li>
+                <li><a href="#objetivo-negocio">2. Objetivo de Negocio</a></li>
+                <li><a href="#arquitetura">3. Arquitetura</a></li>
+                <li><a href="#estrutura">4. Estrutura do Projeto</a></li>
+                <li><a href="#bancos">5. Bancos de Dados e Tabelas de Controle</a></li>
+                <li><a href="#politica-sync">6. Politica de Sincronizacao por Tabela</a></li>
+                <li><a href="#fluxo-web">7. Fluxo Manual via Dashboard</a></li>
+                <li><a href="#fluxo-servico">8. Fluxo do Servico Automatico</a></li>
+                <li><a href="#upsert">9. Estrategia de Upsert e Commit por Lote</a></li>
+                <li><a href="#arquivos-principais">10. Arquivos Principais</a></li>
+                <li><a href="#operacao">11. Operacao e Rotinas</a></li>
+                <li><a href="#validacao">12. Validacao Executada</a></li>
+                <li><a href="#troubleshooting">13. Troubleshooting</a></li>
+                <li><a href="#seguranca">14. Seguranca e Pendencias Tecnicas</a></li>
+                <li><a href="#evolucao">15. Recomendacoes de Evolucao</a></li>
+            </ul>
+        </nav>
+
+        <section id="visao-geral">
+            <h2>1. Visao Geral</h2>
+            <p>
+                O <strong>TASYBackup</strong> e uma aplicacao PHP em estilo MVC simples, hospedada no IIS, utilizada
+                para copiar dados clinicos e cadastrais do banco Oracle de producao do TASY para um banco Oracle XE local.
+                O objetivo e sustentar um ambiente de contingencia hospitalar offline/local, consumido principalmente pelo
+                portal <code>ISCMC</code>.
+            </p>
+            <div class="grid">
+                <div class="card">
+                    <strong>Origem</strong>
+                    <p class="muted">Oracle 19C do TASY, acessado por OCI8 a partir do PHP.</p>
+                </div>
+                <div class="card">
+                    <strong>Destino</strong>
+                    <p class="muted">Oracle 21C XE local no mesmo servidor Windows.</p>
+                </div>
+                <div class="card">
+                    <strong>Acesso operacional</strong>
+                    <p class="muted">Dashboard web manual e servico Windows automatizado.</p>
+                </div>
+                <div class="card">
+                    <strong>Escopo atual</strong>
+                    <p class="muted">Sincronizacao de dados + controle da tabela <code>CONFIG</code> para contingencia.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="objetivo-negocio">
+            <h2>2. Objetivo de Negocio</h2>
+            <p>O sistema atende tres objetivos principais:</p>
+            <ol>
+                <li>Disponibilizar no Oracle XE local um espelho operacional dos dados criticos das ultimas 72 horas.</li>
+                <li>Manter historico acumulado completo de tabelas mestre essenciais ao contexto assistencial e administrativo.</li>
+                <li>Permitir que o portal <code>ISCMC</code> continue funcionando localmente em contingencia, inclusive sem dependencia de internet.</li>
+            </ol>
+
+            <h3>Relacao com o portal ISCMC</h3>
+            <p>
+                O portal <code>ISCMC</code>, hospedado em outra pasta do mesmo IIS, consome o mesmo schema
+                <code>SYSTEM</code> do Oracle XE local. Por isso, a consistencia do TASYBackup impacta diretamente a
+                disponibilidade das informacoes criticas vistas pelos usuarios no portal de contingencia.
+            </p>
+        </section>
+
+        <section id="arquitetura">
+            <h2>3. Arquitetura</h2>
+            <pre>Usuario / Agendamento
+        |
+        +--> Dashboard Web (IIS)
+        |        |
+        |        +--> index.php
+        |        +--> app/bootstrap.php
+        |        +--> HomeController
+        |        +--> SyncModel / BackupModel
+        |
+        +--> Servico Windows (NSSM)
+                 |
+                 +--> php services/BackupService.php
+                 +--> SyncModel
+                 +--> BackupModel
+
+BackupModel
+    |
+    +--> Oracle origem (TASY 19C)
+    +--> Oracle destino (XE local)
+    +--> TASY_SYNC_CONTROL
+    +--> TASY_SYNC_LOGS
+    +--> CONFIG</pre>
+
+            <h3>Caracteristicas arquiteturais</h3>
+            <ul>
+                <li>Aplicacao sem framework externo pesado; bootstrap e roteamento sao proprios.</li>
+                <li>Persistencia via OCI8, sem ORM.</li>
+                <li>Sincronizacao configurada por metadados em <code>app/config/database.php</code>.</li>
+                <li>Fluxo manual e fluxo automatico compartilham o mesmo nucleo funcional de sincronizacao.</li>
+            </ul>
+        </section>
+
+        <section id="estrutura">
+            <h2>4. Estrutura do Projeto</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Caminho</th>
+                        <th>Responsabilidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>index.php</code></td>
+                        <td>Ponto de entrada web e entrega de arquivos estaticos.</td>
+                    </tr>
+                    <tr>
+                        <td><code>app/bootstrap.php</code></td>
+                        <td>Bootstrap MVC e roteamento interno.</td>
+                    </tr>
+                    <tr>
+                        <td><code>app/controllers/HomeController.php</code></td>
+                        <td>Dashboard, disparo manual de sincronizacao e controle de configuracao do front-end.</td>
+                    </tr>
+                    <tr>
+                        <td><code>app/models/BackupModel.php</code></td>
+                        <td>Nucleo de conexao, busca incremental, processamento, upsert, retenção e logs.</td>
+                    </tr>
+                    <tr>
+                        <td><code>app/models/SyncModel.php</code></td>
+                        <td>Camada de orchestration usada pela interface web e pelo servico.</td>
+                    </tr>
+                    <tr>
+                        <td><code>app/helpers/ConfigHelper.php</code></td>
+                        <td>Leitura e atualizacao da tabela <code>CONFIG</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><code>services/BackupService.php</code></td>
+                        <td>Servico automatico para sincronizacao continua via NSSM.</td>
+                    </tr>
+                    <tr>
+                        <td><code>install_service.bat</code></td>
+                        <td>Instalacao e configuracao do servico Windows.</td>
+                    </tr>
+                    <tr>
+                        <td><code>validate_manual_sync.php</code></td>
+                        <td>Validador CLI do fluxo manual real tabela a tabela.</td>
+                    </tr>
+                    <tr>
+                        <td><code>logs/</code></td>
+                        <td>Logs da aplicacao, do servico e diagnosticos operacionais.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="bancos">
+            <h2>5. Bancos de Dados e Tabelas de Controle</h2>
+
+            <h3>Bancos utilizados</h3>
+            <ul>
+                <li><strong>Banco de origem:</strong> Oracle do TASY, schema principal configurado como <code>TASY</code>.</li>
+                <li><strong>Banco de destino:</strong> Oracle XE local, com schema operacional utilizado pelo sistema e pelo portal.</li>
+            </ul>
+
+            <h3>Tabelas de controle esperadas no Oracle XE</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tabela</th>
+                        <th>Finalidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>TASY_SYNC_CONTROL</code></td>
+                        <td>Controla ultimo sync por tabela, total local e metadata minima do processo.</td>
+                    </tr>
+                    <tr>
+                        <td><code>TASY_SYNC_LOGS</code></td>
+                        <td>Armazena registros resumidos das sincronizacoes executadas.</td>
+                    </tr>
+                    <tr>
+                        <td><code>CONFIG</code></td>
+                        <td>Armazena sinalizadores de contingencia, inclusive <code>FRONTEND_ACTIVE</code>.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Premissas importantes</h3>
+            <ul>
+                <li>As tabelas de negocio de destino ja existem no XE, com a mesma estrutura da origem.</li>
+                <li>O projeto nao cria tabelas de negocio; ele apenas insere e atualiza.</li>
+                <li>As chaves fisicas entre <code>PESSOA_FISICA</code> e <code>COMPL_PESSOA_FISICA</code> foram desativadas no XE por performance.</li>
+            </ul>
+        </section>
+
+        <section id="politica-sync">
+            <h2>6. Politica de Sincronizacao por Tabela</h2>
+            <p>
+                A politica de sincronizacao esta centralizada em <code>app/config/database.php</code>. Cada tabela possui
+                metadados como <code>control_column</code>, <code>key_column</code>, <code>key_columns</code>,
+                <code>sync_hours</code>, <code>retention_mode</code>, <code>sync_priority</code> e, quando necessario,
+                <code>batch_size</code>.
+            </p>
+
+            <h3>Tabelas com historico acumulado completo</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tabela</th>
+                        <th>Motivo</th>
+                        <th>Modo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>MEDICO</code></td><td>Cadastro mestre</td><td><span class="badge ok">full</span></td></tr>
+                    <tr><td><code>PESSOA_FISICA</code></td><td>Cadastro mestre base</td><td><span class="badge ok">full</span></td></tr>
+                    <tr><td><code>COMPL_PESSOA_FISICA</code></td><td>Complemento cadastral com chave composta</td><td><span class="badge ok">full</span></td></tr>
+                    <tr><td><code>SETOR_ATENDIMENTO</code></td><td>Dimensao organizacional</td><td><span class="badge ok">full</span></td></tr>
+                    <tr><td><code>UNIDADE_ATENDIMENTO</code></td><td>Dimensao operacional</td><td><span class="badge ok">full</span></td></tr>
+                    <tr><td><code>USUARIO</code></td><td>Identidade local e autenticacao</td><td><span class="badge ok">full</span></td></tr>
+                </tbody>
+            </table>
+
+            <h3>Tabelas com janela movel de 72 horas</h3>
+            <p>
+                As demais tabelas configuradas trabalham em modo <code>rolling</code>, ou seja, sincronizam os registros
+                alterados dentro da janela de 72 horas e aplicam purge local dos dados anteriores a esse intervalo.
+            </p>
+
+            <h3>Ordem de sincronizacao</h3>
+            <p>
+                A ordem e definida por <code>sync_priority</code>. A sincronizacao prioriza cadastros mestre antes das
+                tabelas transacionais, reduzindo riscos de dependencia logica.
+            </p>
+        </section>
+
+        <section id="fluxo-web">
+            <h2>7. Fluxo Manual via Dashboard</h2>
+
+            <h3>Fluxo atual correto</h3>
+            <pre>index.php
+  -> app/bootstrap.php
+    -> HomeController
+      -> SyncModel::forceTableSync()
+        -> BackupModel::insertDataToLocal()
+          -> fetch / stream / batch
+          -> upsert local
+          -> retention policy
+          -> update TASY_SYNC_CONTROL
+          -> logSyncToDatabase()</pre>
+
+            <h3>Comportamento operacional</h3>
+            <ul>
+                <li>O dashboard permite disparar sincronizacao por tabela ou sincronizacao completa.</li>
+                <li>O metodo <code>forceSync()</code> do <code>HomeController</code> utiliza o fluxo estabilizado do <code>SyncModel</code>.</li>
+                <li>O controle de disponibilidade do front-end de contingencia e feito em paralelo pela tabela <code>CONFIG</code>.</li>
+            </ul>
+
+            <h3>Quando usar o fluxo manual</h3>
+            <ul>
+                <li>Teste operacional apos manutencao.</li>
+                <li>Sincronizacao pontual de tabela especifica.</li>
+                <li>Diagnostico de divergencia de dados.</li>
+                <li>Validacao antes de liberar o servico automatico.</li>
+            </ul>
+        </section>
+
+        <section id="fluxo-servico">
+            <h2>8. Fluxo do Servico Automatico</h2>
+
+            <h3>Implementacao atual</h3>
+            <p>
+                O servico foi refatorado para reutilizar exatamente o mesmo fluxo funcional do dashboard manual. Ele nao
+                chama mais metodos legados inexistentes.
+            </p>
+
+            <pre>php services/BackupService.php
+  -> BackupService
+    -> SyncModel
+      -> forceTableSync(tabela)
+        -> BackupModel::insertDataToLocal(tabela)</pre>
+
+            <h3>Caracteristicas do servico</h3>
+            <ul>
+                <li>Loop continuo com retry configuravel.</li>
+                <li>Modo <code>--once</code> para validacao controlada.</li>
+                <li>Modo <code>--table=NOME_TABELA</code> para teste de tabela unica.</li>
+                <li>Logs em arquivo <code>logs/sync.log</code>.</li>
+                <li>Instalacao como servico Windows via NSSM por <code>install_service.bat</code>.</li>
+            </ul>
+
+            <h3>Exemplos</h3>
+            <pre>php services/BackupService.php --once --table=USUARIO
+php services/BackupService.php --once
+php services/BackupService.php --interval=900 --retry=60</pre>
+        </section>
+
+        <section id="upsert">
+            <h2>9. Estrategia de Upsert e Commit por Lote</h2>
+
+            <h3>Modelo atual</h3>
+            <ul>
+                <li>Busca incremental por <code>DT_ATUALIZACAO</code> ou coluna de controle equivalente.</li>
+                <li>Aplicacao de filtros de chave para evitar registros sem identificador util.</li>
+                <li>Processamento com <code>UPDATE</code> seguido de <code>INSERT</code> quando necessario.</li>
+                <li>Fallback para conflito de unicidade com nova tentativa de <code>UPDATE</code>.</li>
+                <li>Commit por lote no banco local.</li>
+            </ul>
+
+            <h3>Tabelas grandes</h3>
+            <p>
+                Para tabelas de maior volume, como <code>PESSOA_FISICA</code>, <code>COMPL_PESSOA_FISICA</code> e
+                <code>EVOLUCAO_PACIENTE</code>, o sistema usa processamento em lote com leitura em streaming do cursor
+                Oracle. Essa estrategia substituiu a paginacao por <code>OFFSET/FETCH</code>, que se mostrou cara para
+                tabelas muito grandes.
+            </p>
+
+            <h3>Chave composta</h3>
+            <p>
+                <code>COMPL_PESSOA_FISICA</code> usa <code>CD_PESSOA_FISICA + NR_SEQUENCIA</code> como chave de
+                sincronizacao. O bind OCI foi corrigido para nao reaproveitar indevidamente variaveis de loop, evitando
+                falsos <code>ORA-00001</code>.
+            </p>
+        </section>
+
+        <section id="arquivos-principais">
+            <h2>10. Arquivos Principais</h2>
+
+            <h3>Configuracao</h3>
+            <ul>
+                <li><code>app/config/database.php</code>: fonte oficial de configuracao de conexao e metadados por tabela.</li>
+                <li><code>app/config/databaseConfig.php</code>: shim de compatibilidade para codigo legado.</li>
+            </ul>
+
+            <h3>Modelos centrais</h3>
+            <ul>
+                <li><code>BackupModel.php</code>: sincronizacao, conexoes, retencao, logs e diagnosticos.</li>
+                <li><code>SyncModel.php</code>: interface operacional para dashboard e servico.</li>
+                <li><code>DatabaseConnection.php</code>: helper auxiliar de conexao reutilizado por pontos legados.</li>
+                <li><code>UserModel.php</code>: autenticacao local baseada em tabela <code>USUARIO</code>.</li>
+            </ul>
+
+            <h3>Scripts auxiliares</h3>
+            <ul>
+                <li><code>validate_manual_sync.php</code>: valida o fluxo real por tabela.</li>
+                <li><code>debug_batch_fetch.php</code>: mede tempo de busca de lote.</li>
+                <li><code>debug_batch_process.php</code>: testa o processamento local de um lote.</li>
+                <li><code>debug_constraints.php</code>: inspeciona restricoes locais.</li>
+            </ul>
+        </section>
+
+        <section id="operacao">
+            <h2>11. Operacao e Rotinas</h2>
+
+            <h3>Rotina recomendada de operacao</h3>
+            <ol>
+                <li>Validar conexoes e ambiente PHP/OCI8.</li>
+                <li>Executar sincronizacao manual de tabela quando houver manutencao ou investigacao.</li>
+                <li>Manter o servico automatico em execucao continua para operacao normal.</li>
+                <li>Monitorar logs e tamanho das tabelas rolling.</li>
+            </ol>
+
+            <h3>Comandos uteis</h3>
+            <pre>cd /d C:\inetpub\wwwroot\TASYBackup
+
+php validate_manual_sync.php
+php validate_manual_sync.php PESSOA_FISICA
+php services/BackupService.php --once --table=USUARIO
+install_service.bat
+net start "TASYBackupService"
+net stop "TASYBackupService"</pre>
+
+            <h3>Arquivos de log importantes</h3>
+            <ul>
+                <li><code>logs/error.log</code>: logs operacionais e diagnosticos de aplicacao.</li>
+                <li><code>logs/sync.log</code>: logs resumidos do servico.</li>
+                <li><code>logs/service_stdout.log</code>: saida padrao do processo do servico.</li>
+                <li><code>logs/service_stderr.log</code>: erros do processo do servico.</li>
+            </ul>
+        </section>
+
+        <section id="validacao">
+            <h2>12. Validacao Executada</h2>
+            <p>
+                A base desta documentacao considera a refatoracao e a validacao funcional realizadas diretamente no
+                ambiente com Oracle real. O fluxo manual foi estabilizado e validado tabela a tabela.
+            </p>
+
+            <h3>Status apos estabilizacao</h3>
+            <ul>
+                <li><span class="badge ok">OK</span> Fluxo manual funcional nas tabelas full e rolling configuradas.</li>
+                <li><span class="badge ok">OK</span> <code>PESSOA_FISICA</code> validada com commit por lote.</li>
+                <li><span class="badge ok">OK</span> <code>COMPL_PESSOA_FISICA</code> validada com chave composta sem erro residual.</li>
+                <li><span class="badge ok">OK</span> <code>EVOLUCAO_PACIENTE</code> estabilizada com streaming em lote.</li>
+                <li><span class="badge ok">OK</span> Servico refatorado e validado em modo <code>--once</code>.</li>
+                <li><span class="badge ok">OK</span> Instalador NSSM corrigido para caminho valido de trabalho.</li>
+            </ul>
+        </section>
+
+        <section id="troubleshooting">
+            <h2>13. Troubleshooting</h2>
+
+            <h3>Servico nao inicia com erro especifico 3</h3>
+            <ul>
+                <li>Causa tipica: <code>AppDirectory</code> invalido no NSSM.</li>
+                <li>Verificar: <code>nssm get TASYBackupService AppDirectory</code>.</li>
+                <li>Corrigir: reinstalar via <code>install_service.bat</code> em prompt elevado.</li>
+            </ul>
+
+            <h3>ORA-00001 em COMPL_PESSOA_FISICA</h3>
+            <ul>
+                <li>Historicamente causado por bind incorreto de chave composta.</li>
+                <li>Validar se a configuracao de <code>key_columns</code> continua correta.</li>
+            </ul>
+
+            <h3>Sincronizacao muito lenta em tabelas grandes</h3>
+            <ul>
+                <li>Verificar se a tabela esta configurada com <code>batch_size</code>.</li>
+                <li>Evitar paginacao por <code>OFFSET/FETCH</code> para tabelas muito volumosas.</li>
+                <li>Usar scripts de debug para identificar se o gargalo esta no fetch ou no processamento.</li>
+            </ul>
+
+            <h3>Dashboard funciona e servico nao</h3>
+            <ul>
+                <li>Comparar logs do servico com <code>logs/error.log</code>.</li>
+                <li>Testar primeiro com <code>php services/BackupService.php --once --table=USUARIO</code>.</li>
+            </ul>
+        </section>
+
+        <section id="seguranca">
+            <h2>14. Seguranca e Pendencias Tecnicas</h2>
+
+            <h3>Riscos ainda presentes</h3>
+            <ul>
+                <li><span class="badge warn">Atencao</span> Credenciais de banco ainda estao no codigo em <code>database.php</code>.</li>
+                <li><span class="badge warn">Atencao</span> Existem scripts auxiliares e testes no raiz que devem ser tratados como utilitarios internos.</li>
+                <li><span class="badge warn">Atencao</span> O projeto ainda possui pontos legados fora do fluxo principal que merecem padronizacao futura.</li>
+            </ul>
+
+            <h3>Melhorias recomendadas de seguranca</h3>
+            <ul>
+                <li>Mover credenciais para variaveis de ambiente ou arquivo fora do repositório.</li>
+                <li>Criar usuario Oracle dedicado no XE em vez de operar permanentemente com <code>SYSTEM</code>.</li>
+                <li>Revisar permissoes do IIS e do usuario do servico.</li>
+                <li>Restringir exposicao publica de scripts utilitarios e de debug.</li>
+            </ul>
+        </section>
+
+        <section id="evolucao">
+            <h2>15. Recomendacoes de Evolucao</h2>
+            <ol>
+                <li>Substituir credenciais hardcoded por configuracao segura externa ao codigo.</li>
+                <li>Padronizar logs em formato estruturado unico.</li>
+                <li>Implementar health-check de servico e alertas basicos.</li>
+                <li>Avaliar uso de <code>MERGE</code> em lote no Oracle para tabelas transacionais maiores.</li>
+                <li>Separar scripts de debug e validacao em uma pasta <code>tools/</code> ou <code>scripts/</code>.</li>
+                <li>Adicionar documentacao complementar para operacao do portal <code>ISCMC</code> em contingencia.</li>
+            </ol>
+
+            <p class="footer">
+                Documento gerado para fins de manutencao, continuidade operacional e registro tecnico do sistema de
+                contingencia hospitalar TASYBackup.
+            </p>
+        </section>
+    </main>
+</body>
+</html>
