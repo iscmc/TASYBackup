@@ -134,8 +134,9 @@ class BackupModel {
     }
 
     private function initializeTableSyncControl($tableName) {
-        // Obter a chave primária da tabela
-        $primaryKey = $this->getPrimaryKeyColumn($tableName);
+        $tableConfig = DatabaseConfig::getTableConfig($tableName);
+        $keyColumns = $tableConfig['key_columns'] ?? [$tableConfig['key_column'] ?? $this->getPrimaryKeyColumn($tableName)];
+        $keyDefinition = implode(',', $keyColumns);
         
         $sql = "MERGE INTO TASY_SYNC_CONTROL t
                 USING (SELECT :table_name AS table_name, :key_column AS key_column FROM dual) s
@@ -148,7 +149,7 @@ class BackupModel {
         
         $stmt = oci_parse($this->localConn, $sql);
         oci_bind_by_name($stmt, ':table_name', $tableName);
-        oci_bind_by_name($stmt, ':key_column', $primaryKey);
+        oci_bind_by_name($stmt, ':key_column', $keyDefinition);
         oci_execute($stmt);
         oci_free_statement($stmt);
     }
@@ -226,74 +227,11 @@ class BackupModel {
                 throw new Exception("Tabela {$tableName} não está configurada para sincronização");
             }
 
-            $controlColumn = $tableConfig['control_column'];
-            $primaryKey = $tableConfig['key_column'];
-            $whereClauses[] = "{$primaryKey} IS NOT NULL";
-            $whereClauses[] = "{$primaryKey} != ''";
-            $syncHours = $tableConfig['sync_hours'] ?? 24;
-            $schema = $tableConfig['schema'] ?? 'TASY';
-
-            // Para chaves numéricas, garantir que são > 0
-            if (in_array($primaryKey, ['NR_SEQUENCIA', 'CD_PACIENTE', 'NR_ATENDIMENTO'])) {
-                $whereClauses[] = "{$primaryKey} > 0";
-            }
-            
-            // Calcula o timestamp das últimas X horas
-            $limiteTempo = date('d-M-Y H:i:s', strtotime("-{$syncHours} hours"));
-            
-            error_log("Configuração: Coluna={$controlColumn}, Horas={$syncHours}, Limite={$limiteTempo}");
-
-            // Constrói a query base
-            $sql = "SELECT * FROM {$schema}.{$tableName}";
-            $whereClauses = [];
-            $params = [];
-
-            // SEMPRE busca das últimas X horas (configurável)
-            if ($controlColumn && $this->colunaExiste($tableName, $controlColumn, $schema)) {
-                $whereClauses[] = "{$controlColumn} >= TO_TIMESTAMP(:limiteTempo, 'DD-MON-YYYY HH24:MI:SS')";
-                $params[':limiteTempo'] = $limiteTempo;
-                
-                error_log("Filtro temporal aplicado: últimas {$syncHours}h");
-            } else {
-                error_log("AVISO: Coluna de controle {$controlColumn} não encontrada, buscando TODOS os registros");
-            }
-            
-            // Para sincronizações futuras (incremental)
-            if ($lastSync && $controlColumn && $this->colunaExiste($tableName, $controlColumn, $schema)) {
-                $formattedLastSync = $this->formatOracleDate($lastSync);
-                if ($formattedLastSync) {
-                    $whereClauses[] = "{$controlColumn} > TO_TIMESTAMP(:lastSync, 'DD-MON-YYYY HH24:MI:SS')";
-                    $params[':lastSync'] = $formattedLastSync;
-                    error_log("Filtro incremental aplicado desde: {$formattedLastSync}");
-                }
-            }
-
-            // Monta a query final
-            if (!empty($whereClauses)) {
-                $sql .= " WHERE " . implode(" AND ", $whereClauses);
-            }
-
-            // Ordenação para consistência
-            $orderColumn = $controlColumn ?: $primaryKey;
-            if ($orderColumn && $this->colunaExiste($tableName, $orderColumn, $schema)) {
-                $sql .= " ORDER BY {$orderColumn}";
-            }
+            [$sql, $params] = $this->buildSourceQuery($tableName, $lastSync);
 
             error_log("SQL Final: {$sql}");
 
-            // Execução segura
-            $stmt = oci_parse($this->sourceConn, $sql);
-            foreach ($params as $key => $value) {
-                // CORREÇÃO: Criar variável separada para bind
-                $bindValue = $value;
-                oci_bind_by_name($stmt, $key, $bindValue);
-            }
-
-            if (!oci_execute($stmt)) {
-                $error = oci_error($stmt);
-                error_log("ERRO na execução SQL: " . $error['message']);
-                throw new Exception("Erro ao buscar registros em {$tableName}: " . $error['message']);
-            }
+            $stmt = $this->executeSourceQuery($sql, $params, $tableName);
 
             $results = [];
             while ($row = oci_fetch_assoc($stmt)) {
@@ -309,6 +247,115 @@ class BackupModel {
             error_log("ERRO em fetchNewRecords: " . $e->getMessage());
             throw $e;
         }
+    }
+
+    private function executeSourceQuery($sql, $params, $tableName) {
+        $stmt = oci_parse($this->sourceConn, $sql);
+        $bindValues = [];
+
+        foreach ($params as $key => $value) {
+            $bindValues[$key] = $value;
+            oci_bind_by_name($stmt, $key, $bindValues[$key]);
+        }
+
+        if (!oci_execute($stmt)) {
+            $error = oci_error($stmt);
+            error_log("ERRO na execução SQL: " . $error['message']);
+            throw new Exception("Erro ao buscar registros em {$tableName}: " . $error['message']);
+        }
+
+        return $stmt;
+    }
+
+    private function fetchNewRecordsBatch($tableName, $lastSync, $offset, $limit) {
+        [$baseSql, $params] = $this->buildSourceQuery($tableName, $lastSync);
+
+        $offset = (int) $offset;
+        $limit = (int) $limit;
+        $sql = $baseSql . " OFFSET {$offset} ROWS FETCH NEXT {$limit} ROWS ONLY";
+
+        $stmt = oci_parse($this->sourceConn, $sql);
+        foreach ($params as $key => $value) {
+            $bindValue = $value;
+            oci_bind_by_name($stmt, $key, $bindValue);
+        }
+
+        if (!oci_execute($stmt)) {
+            $error = oci_error($stmt);
+            oci_free_statement($stmt);
+            throw new Exception("Erro ao buscar lote em {$tableName}: " . $error['message']);
+        }
+
+        $results = [];
+        while ($row = oci_fetch_assoc($stmt)) {
+            $results[] = $row;
+        }
+
+        oci_free_statement($stmt);
+        return $results;
+    }
+
+    private function buildSourceQuery($tableName, $lastSync = null) {
+        $tableConfig = DatabaseConfig::getTableConfig($tableName);
+        if (!$tableConfig) {
+            throw new Exception("Tabela {$tableName} não está configurada para sincronização");
+        }
+
+        $controlColumn = $tableConfig['control_column'];
+        $keyColumns = $tableConfig['key_columns'] ?? [$tableConfig['key_column']];
+        $syncHours = $tableConfig['sync_hours'] ?? 24;
+        $schema = $tableConfig['schema'] ?? 'TASY';
+        $retentionMode = $tableConfig['retention_mode'] ?? 'rolling';
+
+        $limiteTempo = date('d-M-Y H:i:s', strtotime("-{$syncHours} hours"));
+        error_log("Configuração: Coluna={$controlColumn}, Horas={$syncHours}, Limite={$limiteTempo}, Retention={$retentionMode}");
+
+        $sql = "SELECT * FROM {$schema}.{$tableName}";
+        $whereClauses = [];
+        $params = [];
+
+        foreach ($keyColumns as $keyColumn) {
+            $whereClauses[] = "{$keyColumn} IS NOT NULL";
+
+            if (in_array($keyColumn, ['NR_SEQUENCIA', 'CD_PACIENTE', 'NR_ATENDIMENTO', 'CD_PESSOA_FISICA', 'CD_SETOR_ATENDIMENTO', 'NR_SEQ_INTERNO', 'NR_PRESCRICAO', 'CD_EVOLUCAO'])) {
+                $whereClauses[] = "{$keyColumn} > 0";
+            } else {
+                $whereClauses[] = "TRIM({$keyColumn}) <> ''";
+            }
+        }
+
+        $controlColumnExists = $controlColumn && $this->colunaExiste($tableName, $controlColumn, $schema);
+        $requiresTimeWindow = $retentionMode !== 'full' || !$this->hasLocalRows($tableName);
+
+        if ($requiresTimeWindow && $controlColumnExists) {
+            $whereClauses[] = "{$controlColumn} >= TO_TIMESTAMP(:limiteTempo, 'DD-MON-YYYY HH24:MI:SS')";
+            $params[':limiteTempo'] = $limiteTempo;
+            error_log("Filtro temporal aplicado: últimas {$syncHours}h");
+        } elseif (!$controlColumnExists) {
+            error_log("AVISO: Coluna de controle {$controlColumn} não encontrada, buscando TODOS os registros");
+        } else {
+            error_log("Tabela {$tableName} em retenção full com carga acumulada: usando apenas corte incremental");
+        }
+
+        if ($lastSync && $controlColumnExists) {
+            $formattedLastSync = $this->formatOracleDate($lastSync);
+            if ($formattedLastSync) {
+                $whereClauses[] = "{$controlColumn} > TO_TIMESTAMP(:lastSync, 'DD-MON-YYYY HH24:MI:SS')";
+                $params[':lastSync'] = $formattedLastSync;
+                error_log("Filtro incremental aplicado desde: {$formattedLastSync}");
+            }
+        }
+
+        if (!empty($whereClauses)) {
+            $sql .= " WHERE " . implode(" AND ", $whereClauses);
+        }
+
+        $orderColumn = $controlColumn ?: $keyColumns[0];
+        if ($orderColumn && $this->colunaExiste($tableName, $orderColumn, $schema)) {
+            $sql .= " ORDER BY {$orderColumn}";
+        }
+
+        return [$sql, $params];
     }
 
     private function tabelaExiste($tableName, $isSource = false) {
@@ -378,6 +425,21 @@ class BackupModel {
         return null;
     }
 
+    private function hasLocalRows($tableName) {
+        $sql = "SELECT COUNT(*) AS total FROM {$tableName}";
+        $stmt = oci_parse($this->localConn, $sql);
+
+        if (!oci_execute($stmt)) {
+            oci_free_statement($stmt);
+            return false;
+        }
+
+        $row = oci_fetch_assoc($stmt);
+        oci_free_statement($stmt);
+
+        return ((int) ($row['TOTAL'] ?? 0)) > 0;
+    }
+
     private function colunaExiste($tableName, $columnName, $schema = null) {
         // Se schema não foi especificado, pega da configuração
         if ($schema === null) {
@@ -419,22 +481,39 @@ class BackupModel {
      * MÉTODO PRINCIPAL - Copia dados de qualquer tabela (baseado no que funcionou para CPOE_DIETA)
      */
     public function insertDataToLocal($tableName) {
-        set_time_limit(600);
+        set_time_limit(1800);
         try {
             error_log("=== SINCRONIZAÇÃO SIMPLIFICADA: {$tableName} ===");
             
             // 1. Obter último sync
             $lastSync = $this->getUltimoSync($tableName);
             error_log("Última sincronização: " . ($lastSync ?: 'Nunca'));
+
+            if ($this->shouldUseBatchSync($tableName)) {
+                $result = $this->processarTabelaEmLotes($tableName, $lastSync);
+                $this->applyRetentionPolicy($tableName);
+                $this->updateSyncControlSimplificado($tableName);
+                $this->logSyncToDatabase($tableName, $result['processed'], 'INCREMENTAL');
+
+                return [
+                    'success' => true,
+                    'message' => "Tabela {$tableName} sincronizada com sucesso",
+                    'records_processed' => $result['processed'],
+                    'inserted' => $result['inserted'],
+                    'updated' => $result['updated'],
+                    'errors' => $result['errors'],
+                    'error_samples' => $result['error_samples'] ?? []
+                ];
+            }
             
             // 2. Buscar dados NOVOS/ATUALIZADOS
             $remoteData = $this->fetchNewRecords($tableName, $lastSync);
             
             if (empty($remoteData)) {
                 error_log("Nenhum dado novo encontrado para {$tableName}");
-                $this->logSyncToDatabase($tableName, 0, 'INCREMENTAL');
-                // ⭐ ATUALIZAÇÃO SIMPLES MESMO SEM DADOS NOVOS
+                $this->applyRetentionPolicy($tableName);
                 $this->updateSyncControlSimplificado($tableName);
+                $this->logSyncToDatabase($tableName, 0, 'INCREMENTAL');
                 return [
                     'success' => true,
                     'message' => "Nenhum registro novo para {$tableName}",
@@ -446,8 +525,10 @@ class BackupModel {
             
             // 3. Processar dados (com validação básica)
             $result = $this->processarDadosSimplificado($tableName, $remoteData);
+
+            $this->applyRetentionPolicy($tableName);
             
-            // 4. ⭐⭐ ATUALIZAÇÃO GARANTIDA DO CONTROLE - MESMO COM ERROS
+            // 4. Atualiza o controle apenas após concluir a tabela com sucesso
             $this->updateSyncControlSimplificado($tableName);
             
             // 5. Registrar no log
@@ -459,13 +540,13 @@ class BackupModel {
                 'records_processed' => $result['processed'],
                 'inserted' => $result['inserted'],
                 'updated' => $result['updated'],
-                'errors' => $result['errors']
+                'errors' => $result['errors'],
+                'error_samples' => $result['error_samples'] ?? []
             ];
             
         } catch (Exception $e) {
             error_log("ERRO em insertDataToLocal para {$tableName}: " . $e->getMessage());
-            // ⭐⭐ ATUALIZAÇÃO DO CONTROLE MESMO EM CASO DE ERRO
-            $this->updateSyncControlSimplificado($tableName);
+            @oci_rollback($this->localConn);
             $this->logSyncToDatabase($tableName, 0, 'ERROR: ' . $e->getMessage());
             return [
                 'success' => false,
@@ -479,18 +560,20 @@ class BackupModel {
      */
     private function processarDadosSimplificado($tableName, $data) {
         if (empty($data)) {
-            return ['processed' => 0, 'inserted' => 0, 'updated' => 0, 'errors' => 0];
+            return ['processed' => 0, 'inserted' => 0, 'updated' => 0, 'errors' => 0, 'error_samples' => []];
         }
 
-        $primaryKey = $this->getPrimaryKeyForTable($tableName);
+        $keyColumns = $this->getKeyColumnsForTable($tableName);
         $processed = 0;
         $inserted = 0;
         $updated = 0;
         $errors = 0;
+        $errorSamples = [];
+        $errorSamples = [];
 
         foreach ($data as $row) {
             try {
-                $result = $this->inserirOuAtualizarRegistro($tableName, $row, $primaryKey);
+                $result = $this->inserirOuAtualizarRegistro($tableName, $row, $keyColumns);
                 if ($result === 'INSERT') {
                     $inserted++;
                     $processed++;
@@ -501,54 +584,66 @@ class BackupModel {
             } catch (Exception $e) {
                 $errors++;
                 error_log("Erro no registro: " . $e->getMessage());
+                if (count($errorSamples) < 5) {
+                    $errorSamples[] = $e->getMessage();
+                }
             }
         }
 
-        // Commit final dos dados
         oci_commit($this->localConn);
 
         return [
             'processed' => $processed,
             'inserted' => $inserted,
             'updated' => $updated,
-            'errors' => $errors
+            'errors' => $errors,
+            'error_samples' => $errorSamples
         ];
     }
 
      /**
      * Inserir ou atualizar registro individual
      */
-    private function inserirOuAtualizarRegistro($tableName, $row, $primaryKey) {
-        // CORREÇÃO EXCLUSIVAMENTE PARA TABELA COMPL_PESSOA_FISICA
-        if ($tableName === 'COMPL_PESSOA_FISICA') {
-            if (!isset($row['CD_PESSOA_FISICA']) || !isset($row['NR_SEQUENCIA'])) {
-                throw new Exception("Chaves compostas CD_PESSOA_FISICA e NR_SEQUENCIA inválidas");
+    private function inserirOuAtualizarRegistro($tableName, $row, $keyColumns) {
+        $keyValues = [];
+
+        foreach ($keyColumns as $keyColumn) {
+            if (!isset($row[$keyColumn]) || $row[$keyColumn] === null || $row[$keyColumn] === '') {
+                throw new Exception("Chave inválida para {$tableName}: {$keyColumn}");
             }
 
-            $cd_pessoa = $row['CD_PESSOA_FISICA'];
-            $nr_sequencia = $row['NR_SEQUENCIA'];
-            
-            if ($this->isNewRecord($tableName, $primaryKey, ['CD_PESSOA_FISICA' => $cd_pessoa, 'NR_SEQUENCIA' => $nr_sequencia])) {
-                $this->inserirRegistro($tableName, $row);
-                return 'INSERT';
-            } else {
-                $this->atualizarRegistroComposta($tableName, $row, $cd_pessoa, $nr_sequencia);
-                return 'UPDATE';
-            }
+            $keyValues[$keyColumn] = $row[$keyColumn];
+        }
+
+        if (count($keyColumns) > 1) {
+            $updatedRows = $this->atualizarRegistroComposta($tableName, $row, $keyValues);
         } else {
-            // Código original para outras tabelas
-            if (!isset($row[$primaryKey]) || empty($row[$primaryKey])) {
-                throw new Exception("Chave primária inválida");
+            $primaryKey = $keyColumns[0];
+            $updatedRows = $this->atualizarRegistro($tableName, $row, $primaryKey, $keyValues[$primaryKey]);
+        }
+
+        if ($updatedRows > 0) {
+            return 'UPDATE';
+        }
+
+        try {
+            $this->inserirRegistro($tableName, $row);
+            return 'INSERT';
+        } catch (Exception $e) {
+            if ($this->isUniqueConstraintError($e->getMessage())) {
+                if (count($keyColumns) > 1) {
+                    $updatedRows = $this->atualizarRegistroComposta($tableName, $row, $keyValues);
+                } else {
+                    $primaryKey = $keyColumns[0];
+                    $updatedRows = $this->atualizarRegistro($tableName, $row, $primaryKey, $keyValues[$primaryKey]);
+                }
+
+                if ($updatedRows > 0) {
+                    return 'UPDATE';
+                }
             }
 
-            $keyValue = $row[$primaryKey];
-            if ($this->isNewRecord($tableName, $primaryKey, $keyValue)) {
-                $this->inserirRegistro($tableName, $row);
-                return 'INSERT';
-            } else {
-                $this->atualizarRegistro($tableName, $row, $primaryKey, $keyValue);
-                return 'UPDATE';
-            }
+            throw $e;
         }
     }
 
@@ -565,20 +660,25 @@ class BackupModel {
         
         $sql = "UPDATE {$tableName} SET " . implode(', ', $updateCols) . " WHERE {$primaryKey} = :primary_key";
         $stmt = oci_parse($this->localConn, $sql);
+        $bindValues = [];
         
         foreach ($row as $col => $val) {
             if ($col !== $primaryKey) {
-                oci_bind_by_name($stmt, ":{$col}", $row[$col]);
+                $bindValues[$col] = $val;
+                oci_bind_by_name($stmt, ":{$col}", $bindValues[$col]);
             }
         }
-        oci_bind_by_name($stmt, ":primary_key", $keyValue);
+        $bindValues['primary_key'] = $keyValue;
+        oci_bind_by_name($stmt, ":primary_key", $bindValues['primary_key']);
         
         if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
             $error = oci_error($stmt);
             throw new Exception("Erro ao atualizar: " . $error['message']);
         }
-        
+
+        $updatedRows = oci_num_rows($stmt);
         oci_free_statement($stmt);
+        return $updatedRows;
     }
 
     /**
@@ -610,9 +710,11 @@ class BackupModel {
         
         $sql = "INSERT INTO {$tableName} ({$columnsStr}) VALUES ({$placeholders})";
         $stmt = oci_parse($this->localConn, $sql);
+        $bindValues = [];
         
         foreach ($row as $col => $val) {
-            oci_bind_by_name($stmt, ":{$col}", $row[$col]);
+            $bindValues[$col] = $val;
+            oci_bind_by_name($stmt, ":{$col}", $bindValues[$col]);
         }
         
         if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
@@ -981,53 +1083,43 @@ class BackupModel {
      * Determina chave primária para cada tabela
      */
     private function getPrimaryKeyForTable($tableName) {
-        $primaryKeys = [
-            'CPOE_DIETA' => 'NR_SEQUENCIA',
-            'CPOE_PROCEDIMENTO' => 'NR_SEQUENCIA', 
-            'CPOE_GASOTERAPIA' => 'NR_SEQUENCIA',
-            'CPOE_MATERIAL' => 'NR_SEQUENCIA',
-            'CPOE_RECOMENDACAO' => 'NR_SEQUENCIA',
-            'CPOE_HEMOTERAPIA' => 'NR_SEQUENCIA',
-            'CPOE_DIALISE' => 'NR_SEQUENCIA',
-            'CPOE_INTERVENCAO' => 'NR_SEQUENCIA',
-            'CPOE_ANATOMIA_PATOLOGICA' => 'NR_SEQUENCIA',
-            'USUARIO' => 'NM_USUARIO',
-            'REGRA_PADRAO_USUARIO' => 'NR_SEQUENCIA',
-            'USER_LOCALE' => 'NM_USER',
-            'PACIENTE' => 'CD_PACIENTE',
-            'PESSOA_FISICA' => 'CD_PESSOA_FISICA',
-            'COMPL_PESSOA_FISICA' => 'CD_PESSOA_FISICA',
-            'ATENDIMENTO_PACIENTE' => 'NR_ATENDIMENTO',
-            'SETOR_ATENDIMENTO' => 'CD_SETOR_ATENDIMENTO',
-            'UNIDADE_ATENDIMENTO' => 'NR_SEQ_INTERNO',
-            'ATEND_PACIENTE_UNIDADE' => 'NR_SEQ_INTERNO',
-            'MEDICO' => 'CD_PESSOA_FISICA',
-            'PRESCR_MEDICA' => 'NR_PRESCRICAO',
-            'EVOLUCAO_PACIENTE' => 'CD_EVOLUCAO'
-        ];
-        
-        return $primaryKeys[$tableName] ?? $this->getPrimaryKeyColumn($tableName);
+        $keyColumns = $this->getKeyColumnsForTable($tableName);
+        return $keyColumns[0] ?? $this->getPrimaryKeyColumn($tableName);
+    }
+
+    private function getKeyColumnsForTable($tableName) {
+        $tableConfig = DatabaseConfig::getTableConfig($tableName);
+        if (!$tableConfig) {
+            return [$this->getPrimaryKeyColumn($tableName)];
+        }
+
+        return $tableConfig['key_columns'] ?? [$tableConfig['key_column']];
     }
 
     /**
      * Verifica se registro é novo
      */
-    private function isNewRecord($tableName, $primaryKey, $keyValue) {
-        // CORREÇÃO ESPECÍFICA PARA COMPL_PESSOA_FISICA - verificar chave composta
-        if ($tableName === 'COMPL_PESSOA_FISICA') {
-            $sql = "SELECT COUNT(*) as count FROM {$tableName} WHERE CD_PESSOA_FISICA = :cd_pessoa AND NR_SEQUENCIA = :nr_sequencia";
-            $stmt = oci_parse($this->localConn, $sql);
-            
-            // Extrair valores da chave composta
-            $cd_pessoa = $keyValue['CD_PESSOA_FISICA'] ?? $keyValue;
-            $nr_sequencia = $keyValue['NR_SEQUENCIA'] ?? null;
-            
-            oci_bind_by_name($stmt, ':cd_pessoa', $cd_pessoa);
-            oci_bind_by_name($stmt, ':nr_sequencia', $nr_sequencia);
-        } else {
-            $sql = "SELECT COUNT(*) as count FROM {$tableName} WHERE {$primaryKey} = :key_value";
-            $stmt = oci_parse($this->localConn, $sql);
-            oci_bind_by_name($stmt, ':key_value', $keyValue);
+    private function isNewRecord($tableName, $keyColumns, $keyValues) {
+        if (!is_array($keyColumns)) {
+            $keyColumns = [$keyColumns];
+        }
+
+        if (!is_array($keyValues)) {
+            $keyValues = [$keyColumns[0] => $keyValues];
+        }
+
+        $conditions = [];
+
+        foreach ($keyColumns as $index => $keyColumn) {
+            $conditions[] = "{$keyColumn} = :key_value_{$index}";
+        }
+
+        $sql = "SELECT COUNT(*) as count FROM {$tableName} WHERE " . implode(' AND ', $conditions);
+        $stmt = oci_parse($this->localConn, $sql);
+
+        foreach ($keyColumns as $index => $keyColumn) {
+            $value = $keyValues[$keyColumn];
+            oci_bind_by_name($stmt, ':key_value_' . $index, $value);
         }
         
         oci_execute($stmt);
@@ -1035,6 +1127,10 @@ class BackupModel {
         oci_free_statement($stmt);
         
         return $result['COUNT'] == 0;
+    }
+
+    private function isUniqueConstraintError($message) {
+        return strpos($message, 'ORA-00001') !== false;
     }
 
     // Adicionar este novo método auxiliar para formatação de datas
@@ -1233,17 +1329,124 @@ class BackupModel {
         }
     }
 
+    private function shouldUseBatchSync($tableName) {
+        $tableConfig = DatabaseConfig::getTableConfig($tableName);
+        return !empty($tableConfig['batch_size']);
+    }
+
+    private function processarTabelaEmLotes($tableName, $lastSync) {
+        $tableConfig = DatabaseConfig::getTableConfig($tableName);
+        $batchSize = (int) ($tableConfig['batch_size'] ?? 500);
+        $processed = 0;
+        $inserted = 0;
+        $updated = 0;
+        $errors = 0;
+        $errorSamples = [];
+        $currentBatch = [];
+
+        error_log("Sincronização em lotes ativada para {$tableName} com lote de {$batchSize} registros");
+        [$sql, $params] = $this->buildSourceQuery($tableName, $lastSync);
+        $stmt = $this->executeSourceQuery($sql, $params, $tableName);
+
+        if (function_exists('oci_set_prefetch')) {
+            @oci_set_prefetch($stmt, $batchSize);
+        }
+
+        while ($row = oci_fetch_assoc($stmt)) {
+            $currentBatch[] = $row;
+
+            if (count($currentBatch) < $batchSize) {
+                continue;
+            }
+
+            $batchResult = $this->processarLoteSincronizacao($tableName, $currentBatch, $processed, $errorSamples);
+            $processed += $batchResult['processed'];
+            $inserted += $batchResult['inserted'];
+            $updated += $batchResult['updated'];
+            $errors += $batchResult['errors'];
+            $currentBatch = [];
+            set_time_limit(1800);
+        }
+
+        if (!empty($currentBatch)) {
+            $batchResult = $this->processarLoteSincronizacao($tableName, $currentBatch, $processed, $errorSamples);
+            $processed += $batchResult['processed'];
+            $inserted += $batchResult['inserted'];
+            $updated += $batchResult['updated'];
+            $errors += $batchResult['errors'];
+        }
+
+        oci_free_statement($stmt);
+
+        if ($processed === 0 && $errors === 0) {
+            error_log("Nenhum dado novo encontrado para {$tableName} em modo lote");
+        }
+
+        return [
+            'processed' => $processed,
+            'inserted' => $inserted,
+            'updated' => $updated,
+            'errors' => $errors,
+            'error_samples' => $errorSamples
+        ];
+    }
+
+    private function processarLoteSincronizacao($tableName, $batch, $processedSoFar, &$errorSamples) {
+        error_log("Processando lote de {$tableName}: início {$processedSoFar}, quantidade " . count($batch));
+
+        $batchResult = $this->processarDadosSimplificado($tableName, $batch);
+        foreach ($batchResult['error_samples'] ?? [] as $sample) {
+            if (count($errorSamples) < 5) {
+                $errorSamples[] = $sample;
+            }
+        }
+
+        return $batchResult;
+    }
+
+    private function applyRetentionPolicy($tableName) {
+        $tableConfig = DatabaseConfig::getTableConfig($tableName);
+        if (!$tableConfig) {
+            return;
+        }
+
+        if (($tableConfig['retention_mode'] ?? 'rolling') !== 'rolling') {
+            return;
+        }
+
+        $controlColumn = $tableConfig['control_column'] ?? null;
+        $syncHours = (int) ($tableConfig['sync_hours'] ?? 72);
+
+        if (!$controlColumn) {
+            return;
+        }
+
+        $sql = "DELETE FROM {$tableName}
+                WHERE {$controlColumn} IS NOT NULL
+                AND {$controlColumn} < SYSTIMESTAMP - NUMTODSINTERVAL(:sync_hours, 'HOUR')";
+
+        $stmt = oci_parse($this->localConn, $sql);
+        oci_bind_by_name($stmt, ':sync_hours', $syncHours);
+
+        if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
+            $error = oci_error($stmt);
+            oci_free_statement($stmt);
+            throw new Exception("Erro ao aplicar retenção em {$tableName}: " . $error['message']);
+        }
+
+        $purged = oci_num_rows($stmt);
+        oci_free_statement($stmt);
+
+        if ($purged > 0) {
+            error_log("Retenção rolling aplicada em {$tableName}: {$purged} registros antigos removidos");
+        }
+    }
+
     /**
      * Sincroniza todas as tabelas
      */
     public function syncAllTables() {
-        $tables = [
-            'CPOE_DIETA',
-            'CPOE_PROCEDIMENTO', 
-            'USUARIO',
-            'REGRA_PADRAO_USUARIO',
-            'USER_LOCALE'
-        ];
+        $tables = DatabaseConfig::getTablesToSync();
         
         $results = [];
         
@@ -1353,10 +1556,26 @@ class BackupModel {
         }
 
         try {
+            $oracleFormats = [
+                'd-M-y h.i.s.u A',
+                'd-M-y h.i.s A',
+                'd-M-y H.i.s.u',
+                'd-M-y H.i.s',
+                'd-M-y h:i:s A',
+                'd-M-y H:i:s'
+            ];
+
+            foreach ($oracleFormats as $format) {
+                $date = DateTime::createFromFormat($format, $dateString);
+                if ($date !== false) {
+                    return strtoupper($date->format('d-M-Y H:i:s'));
+                }
+            }
+
             // Tenta converter de formato ISO (YYYY-MM-DD)
             if (preg_match('/^\d{4}-\d{2}-\d{2}/', $dateString)) {
                 $date = new DateTime($dateString);
-                return $date->format('d-M-Y H:i:s');
+                return strtoupper($date->format('d-M-Y H:i:s'));
             }
             // Tenta converter de formato brasileiro (DD/MM/YYYY)
             elseif (preg_match('/^\d{2}\/\d{2}\/\d{4}/', $dateString)) {
@@ -1364,11 +1583,11 @@ class BackupModel {
                 if ($date === false) {
                     $date = DateTime::createFromFormat('d/m/Y', $dateString);
                 }
-                return $date->format('d-M-Y H:i:s');
+                return strtoupper($date->format('d-M-Y H:i:s'));
             }
             // Tenta converter timestamp Unix
             elseif (is_numeric($dateString)) {
-                return date('d-M-Y H:i:s', $dateString);
+                return strtoupper(date('d-M-Y H:i:s', $dateString));
             }
         } catch (Exception $e) {
             error_log("Erro ao converter data: {$dateString} - " . $e->getMessage());
@@ -2022,32 +2241,46 @@ class BackupModel {
     }
 
     // Workaround para tratar a tabela compl_pessoa_fisica que tem chave composta - 2 índices
-    private function atualizarRegistroComposta($tableName, $row, $cd_pessoa, $nr_sequencia) {
+    private function atualizarRegistroComposta($tableName, $row, $keyValues) {
         $updateCols = [];
+        $keyColumns = array_keys($keyValues);
+
         foreach ($row as $col => $val) {
-            if ($col !== 'CD_PESSOA_FISICA' && $col !== 'NR_SEQUENCIA') {
+            if (!in_array($col, $keyColumns, true)) {
                 $updateCols[] = "{$col} = :{$col}";
             }
         }
-        
-        $sql = "UPDATE {$tableName} SET " . implode(', ', $updateCols) . 
-            " WHERE CD_PESSOA_FISICA = :cd_pessoa AND NR_SEQUENCIA = :nr_sequencia";
+
+        $whereClauses = [];
+        foreach ($keyColumns as $keyColumn) {
+            $whereClauses[] = "{$keyColumn} = :where_{$keyColumn}";
+        }
+
+        $sql = "UPDATE {$tableName} SET " . implode(', ', $updateCols) .
+            " WHERE " . implode(' AND ', $whereClauses);
         
         $stmt = oci_parse($this->localConn, $sql);
+        $bindValues = [];
         
         foreach ($row as $col => $val) {
-            if ($col !== 'CD_PESSOA_FISICA' && $col !== 'NR_SEQUENCIA') {
-                oci_bind_by_name($stmt, ":{$col}", $row[$col]);
+            if (!in_array($col, $keyColumns, true)) {
+                $bindValues[$col] = $val;
+                oci_bind_by_name($stmt, ":{$col}", $bindValues[$col]);
             }
         }
-        oci_bind_by_name($stmt, ":cd_pessoa", $cd_pessoa);
-        oci_bind_by_name($stmt, ":nr_sequencia", $nr_sequencia);
+
+        foreach ($keyValues as $keyColumn => $keyValue) {
+            $bindValues["where_{$keyColumn}"] = $keyValue;
+            oci_bind_by_name($stmt, ":where_{$keyColumn}", $bindValues["where_{$keyColumn}"]);
+        }
         
         if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
             $error = oci_error($stmt);
             throw new Exception("Erro ao atualizar: " . $error['message']);
         }
-        
+
+        $updatedRows = oci_num_rows($stmt);
         oci_free_statement($stmt);
+        return $updatedRows;
     }
 }

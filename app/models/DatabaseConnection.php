@@ -13,7 +13,7 @@ class DatabaseConnection {
             return self::$connections[$type];
         }
         
-        $config = ($type === 'local') ? DatabaseConfig::$localDb : DatabaseConfig::$tasyProdDb;
+        $config = ($type === 'local') ? DatabaseConfig::$localDb : DatabaseConfig::$tasyDb;
         
         // Configurações de ambiente
         putenv("NLS_LANG=BRAZILIAN PORTUGUESE_BRAZIL.AL32UTF8");
@@ -56,6 +56,7 @@ class DatabaseConnection {
     public static function executeQuery($sql, $params = [], $type = 'local') {
         $conn = self::getConnection($type);
         $stmt = oci_parse($conn, $sql);
+        $bindValues = [];
         
         if (!$stmt) {
             $e = oci_error($conn);
@@ -64,7 +65,8 @@ class DatabaseConnection {
         
         // Bind dos parâmetros
         foreach ($params as $key => $value) {
-            oci_bind_by_name($stmt, $key, $params[$key]);
+            $bindValues[$key] = $value;
+            oci_bind_by_name($stmt, $key, $bindValues[$key]);
         }
         
         if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
